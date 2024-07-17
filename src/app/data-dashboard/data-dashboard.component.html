@@ -1,0 +1,13 @@
+<div class="tabs">
+  <div class="tab" [class.active]="activeTab === 'gantt-chart'" (click)="selectTab('gantt-chart')">
+    Gantt Chart
+  </div>
+  <div class="tab" [class.active]="activeTab === 'data-table'" (click)="selectTab('data-table')">
+    Data Table
+  </div>
+</div>
+
+<div class="content">
+  <app-gantt-chart *ngIf="activeTab === 'gantt-chart'"></app-gantt-chart>
+  <app-data-table *ngIf="activeTab === 'data-table'"></app-data-table>
+</div>

@@ -1,0 +1,46 @@
+#sidebar {
+    width: auto;
+    height: 100%;
+    transition: width 0.3s ease-in-out;
+    background-color: #0f3d70;
+  }
+  
+  #menu {
+    display: flex;
+    flex-direction: column;
+    padding-top: 0px;
+    width: auto;
+  }
+  
+  #menu a {
+    text-decoration: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    cursor: pointer; /* Ensure cursor is default */
+  
+  }
+  
+  #menu a:hover {
+    background-color: #ed780f;
+  }
+  
+  .icon {
+    display: inline-block;
+    margin-right: 10px;
+  }
+  
+  .full-content {
+    display: none;
+    padding-left: 20px;
+  }
+  
+  .minimized .icon {
+    display: block;
+  }
+  
+  .minimized .full-content {
+    display: inline-block;
+  }
+  

@@ -1,0 +1,34 @@
+<div class="container">
+    <div class="top-left-box"></div>
+    <div class="bottom-left-box"></div>
+    <div class="right-box"></div>
+    <div class="bottom-box"></div>
+    <div class="divider"></div>
+    <div class="tooltip"></div>
+    <div class="filters-box">
+      <div class="content-header">Content</div>
+      <div class="date-range">{{ dateRangeText }}</div>
+      <div class="filters">
+        <div class="filter-group filter-by-member-id">
+          <input type="text" id="memberIdFilter" #memberIdFilter placeholder="Member ID" (input)="applyFilters()">
+        </div>
+        <div class="filter-group filter-by-product">
+          <select id="taskFilter" #taskFilter (change)="applyFilters()">
+            <option value="all">All Products</option>
+            <option *ngFor="let task of uniqueTasks" [value]="task">{{ task }}</option>
+          </select>
+          <div class="triangle-icon"></div>
+        </div>
+        <div class="filter-group filter-by-date">
+          <input type="date" id="startDate" #startDate placeholder="Start Date" (change)="applyFilters()">
+        </div>
+        <div class="filter-group filter-by-date">
+          <input type="date" id="endDate" #endDate placeholder="End Date" (change)="applyFilters()">
+        </div>
+      </div>
+    </div>
+    <div class="gantt-chart">
+      <svg></svg>
+    </div>
+  </div>
+  

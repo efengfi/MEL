@@ -1,0 +1,25 @@
+<div id="sidebar" [ngClass]="{ minimized: minimized }">
+    <div id="menu">
+      <a href="#">
+        <img *ngIf="minimized" src="assets/home.svg" alt="Home Icon" class="icon" />
+        <span class="full-content">Home</span>
+      </a>
+      <a routerLink="/datadashboard">
+        <img *ngIf="minimized" src="assets/product.svg" alt="Product Icon" class="icon" />
+        <span class="full-content">Products</span>
+      </a>
+      <a href="#">
+        <img *ngIf="minimized" src="assets/profile.svg" alt="Profile Icon" class="icon" />
+        <span class="full-content">Profile</span>
+      </a>
+      <a href="#">
+        <img *ngIf="minimized" src="assets/help.svg" alt="Help Icon" class="icon" />
+        <span class="full-content">Help</span>
+      </a>
+      <a href="#">
+        <img *ngIf="minimized" src="assets/logout.svg" alt="Logout Icon" class="icon" />
+        <span class="full-content">Logout</span>
+      </a>
+    </div>
+  </div>
+  

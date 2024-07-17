@@ -1,0 +1,15 @@
+<div id="header">
+    <div id="logo">
+      <img 
+        [src]="
+        sidebarActive
+        ? 'assets/cross-icon.svg' 
+        : 'assets/menu-icon.svg'
+        "
+        (click)="toggleSidebar.emit()"
+      />
+      <img src="assets/globe.svg" alt="Globe Icon" class="globe-icon" />
+      NAVY FEDERAL CREDIT UNION
+    </div>
+  </div>
+  

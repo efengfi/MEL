@@ -1,0 +1,23 @@
+
+
+.container {
+  margin-top: 31px;
+  container: relative;
+  overflow: hidden;
+  background-color: #fff;
+  height: 100%;
+}
+
+table {
+  border-top: 1.5px solid #dfe4ea;
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 20%;
+}
+
+.custom-table th.mat-header-cell, .custom-table td.mat-cell {
+  color: #0e0c22;
+}
