@@ -21,7 +21,7 @@
     left: 309px;
     top: 0px;
     height: 100%;
-    width: 1.5px;
+    width: 0.5px;
     background-color: #dfe4ea;
     z-index: 4;
   }
@@ -33,9 +33,12 @@
     height: 100%;
     width: 20px;
     background-color: white;
-    border-left: 1.5px solid #dfe4ea;
+    border-left: 0.5px solid #dfe4ea;
     z-index: 3;
   }
+
+
+  
 
 .filters-box {
   border-bottom: 0.5px solid #dfe4ea;
@@ -128,7 +131,7 @@
   height: 25px;
   font-size: 12px;
   padding: 3px;
-  border: 1.5px solid #dfe4ea;
+  border: 0.5px solid #dfe4ea;
   box-sizing: border-box;
   border-radius: 7px;
   color: #0e0c22;

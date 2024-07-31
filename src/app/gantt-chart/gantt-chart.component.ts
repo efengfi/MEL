@@ -86,7 +86,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   drawGanttChart(): void {
     d3.select('svg').selectAll('*').remove();
     const filteredTasks = this.filterTasks();
-    const margin = { top: 30, right: 0, bottom: 15, left: 250, right2: 0, left2: 140 };
+    const margin = { top: 30, right: 0, bottom: 15, left: 249.65, right2: 0, left2: 140 };
     const width = this.svgWidth - margin.left - margin.right - margin.right2;
     const height = 451 - margin.top - margin.bottom;
     const svg = d3.select('svg')
