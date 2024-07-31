@@ -4,9 +4,9 @@
     width: 100%;
     font-size: 14px;
     background-color: #fff;
-    border-bottom: 1.5px solid #dfe4ea;
+    border-bottom: 0.5px solid #dfe4ea;
     justify-content: flex-start;
-    z-index: 5;
+    z-index: 6;
   }
   
   .tab {
@@ -30,12 +30,12 @@
   
   .tab.active::after,
   .tab:hover::after {
-    background-color: #0767bf; /* Show underline on hover/active */
+    background-color: #ed780f; /* Show underline on hover/active */
   }
   
   .tab.active,
   .tab:hover {
-    color: #0767bf;
+    color: #ed780f;
   }
   
   .tab.active {

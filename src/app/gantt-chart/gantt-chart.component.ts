@@ -5,6 +5,7 @@ interface Event {
   name: string;
   start: Date;
   end: Date;
+				  
 }
 
 interface Task {
@@ -24,10 +25,12 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   @ViewChild('endDate') endDate!: ElementRef;
   @ViewChild('memberIdFilter') memberIdFilter!: ElementRef;
 
+  currentDate = new Date();					   
+
   memberData: { [memberId: string]: Task[] } = {
-    '001': [
-      { task: 'Checking', events: [
-        { name: 'Event 1', start: new Date(2024, 5, 1), end: new Date(2024, 5, 3) },
+    '10': [
+      { task: 'Checking', events: [																																  
+        { name: 'Event 1', start: new Date(2024, 5, 1), end: new Date(2024, 5, 3) },																																	  
         { name: 'Event 2', start: new Date(2024, 5, 4), end: new Date(2024, 5, 5) },
         { name: 'Event 3', start: new Date(2024, 5, 10), end: new Date(2024, 7, 11) }
       ], expanded: true },
@@ -42,26 +45,15 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         { name: 'Event 3', start: new Date(2024, 5, 20), end: new Date(2024, 7, 22) }
       ], expanded: true },
       { task: 'Credit', events: [
+																																									  
         { name: 'Event 1', start: new Date(2024, 7, 9), end: new Date(2024, 8, 5) },
+																																									  
         { name: 'Event 2', start: new Date(2024, 2, 13), end: new Date(2024, 3, 15) },
         { name: 'Event 3', start: new Date(2024, 5, 20), end: new Date(2024, 7, 22) }
       ], expanded: true },
-    ],
-    '002': [
-      { task: 'Credit', events: [
-        { name: 'Event 1', start: new Date(2024, 5, 6), end: new Date(2024, 5, 8) },
-        { name: 'Event 2', start: new Date(2024, 5, 9), end: new Date(2024, 5, 12) },
-        { name: 'Event 3', start: new Date(2024, 5, 14), end: new Date(2024, 5, 16) }
-      ], expanded: true }
-    ],
-    '003': [
-      { task: 'Loan', events: [
-        { name: 'Event 1', start: new Date(2024, 5, 9), end: new Date(2024, 5, 12) },
-        { name: 'Event 2', start: new Date(2024, 5, 13), end: new Date(2024, 5, 15) },
-        { name: 'Event 3', start: new Date(2024, 5, 20), end: new Date(2024, 5, 22) }
-      ], expanded: true }
     ]
   };
+
 
   uniqueTasks = ['Checking', 'Savings', 'Credit', 'Loan'];
   sampleMemberIds = Object.keys(this.memberData);
@@ -95,12 +87,10 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
 
   drawGanttChart(): void {
     d3.select('svg').selectAll('*').remove();
-  
     const filteredTasks = this.filterTasks();
-    const margin = { top: 30, right: 0, bottom: 48, left: 161 };
-    const width = this.svgWidth - margin.left - margin.right;
+    const margin = { top: 30, right: 0, bottom: 15, left: 250, right2: 0, left2: 140 };
+    const width = this.svgWidth - margin.left - margin.right - margin.right2;
     const height = 451 - margin.top - margin.bottom;
-  
     const svg = d3.select('svg')
       .attr('width', this.svgWidth)
       .attr('height', height + margin.top + margin.bottom)
@@ -144,6 +134,12 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .paddingInner(0.35)
       .paddingOuter(0.35);
   
+    const durationY = d3.scaleBand()
+      .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task} - ${event.name}`) : [])]))
+      .range([0, height])
+      .paddingInner(0.35)
+      .paddingOuter(0.35);
+  
     const chartContainer = svg.append('g')
       .attr('class', 'chart-content')
       .attr('clip-path', 'url(#clip)');
@@ -164,9 +160,9 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .enter().append('rect')
       .attr('class', 'span-bar')
       .attr('x', d => x(d3.min(d.events, e => e.start)!))
-      .attr('y', d => y(d.task)! + y.bandwidth() * 0.25) // Adjust the y position to make the span bar skinnier
+      .attr('y', d => y(d.task)! + y.bandwidth() * 0.25)
       .attr('width', d => x(d3.max(d.events, e => e.end)!) - x(d3.min(d.events, e => e.start)!))
-      .attr('height', y.bandwidth() * 0.5) // Adjust the height to make the span bar skinnier
+      .attr('height', y.bandwidth() * 0.5)
       .attr('fill', d => d3.color(color(d.task))!.darker(0.0).toString())
       .attr('rx', 5)
       .attr('ry', 5)
@@ -313,7 +309,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .selectAll('text')
       .style('text-anchor', 'middle')
       .style('font-weight', '600')
-      .style('font-size', '14px')
+      .style('font-size', '12px')
       .style('fill', '#0e0c22')
       .attr('y', -10);
   
@@ -322,8 +318,8 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .call(d3.axisLeft(y).tickSize(0).tickPadding(10).tickFormat(d => this.formatEventLabel(d as string)))
       .selectAll('text')
       .style('text-anchor', 'start')
-      .attr('x', -120)
-      .style('font-weight', d => ['Checking', 'Savings', 'Credit', 'Loan'].includes(d as string) ? '600' : 'normal')
+      .attr('x', -224)
+      .style('font-weight', d => ['Checking', 'Savings', 'Credit', 'Loan'].includes(d as string) ? 'bold' : 'normal')
       .style('font-size', d => ['Checking', 'Savings', 'Credit', 'Loan'].includes(d as string) ? '14px' : '12px')
       .style('fill', '#0e0c22')
       .style('cursor', 'pointer')
@@ -334,10 +330,31 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(x).tickFormat(() => '').tickSize(0));
   
+    // Add a new y-axis for the duration labels
     svg.append('g')
-      .attr('class', 'y-axis-right')
-      .attr('transform', `translate(${width}, 0)`)
-      .call(d3.axisRight(y).tickFormat(() => '').tickSize(0));
+      .attr('class', 'y-axis-duration')
+      .attr('transform', `translate(${margin.left2 - 180}, 0)`) // Adjust the translation value to move the axis more to the right
+      .call(d3.axisLeft(durationY).tickFormat(d => this.formatDurationLabel(d as string, filteredTasks)).tickSize(0))
+      .selectAll('path')
+      .style('stroke', 'none'); // Remove the line for the duration axis
+  
+    svg.selectAll('.y-axis-duration text')
+      .style('font-size', '12px')
+      .attr('text-anchor', 'start') // Left-align text
+      .attr('x', -40);
+  
+    // Add a new y-axis for the duration labels of the span bars
+    svg.append('g')
+      .attr('class', 'y-axis-duration-span')
+      .attr('transform', `translate(${margin.left2 - 180}, 0)`) // Adjust the translation value to move the axis more to the right
+      .call(d3.axisLeft(durationY).tickFormat(d => this.formatDurationLabelForSpan(d as string, filteredTasks)).tickSize(0))
+      .selectAll('path')
+      .style('stroke', 'none'); // Remove the line for the duration axis
+  
+    svg.selectAll('.y-axis-duration-span text')
+      .style('font-size', '12px')
+      .attr('text-anchor', 'start') // Left-align text
+      .attr('x', -40);
   
     svg.selectAll('.triangle')
       .data(filteredTasks)
@@ -350,7 +367,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       })
       .attr('fill', '#0e0c22')
       .attr('transform', d => {
-        const xPosition = -140;
+        const xPosition = -234;
         const yPosition = y(d.task)! + y.bandwidth() / 2;
         const rotation = d.expanded ? 180 : 90;
         return `translate(${xPosition}, ${yPosition}) rotate(${rotation})`;
@@ -379,7 +396,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         svg.selectAll('.x-axis-top text')
           .style('text-anchor', 'middle')
           .style('font-weight', '600')
-          .style('font-size', '14px')
+          .style('font-size', '12px')
           .style('fill', '#0e0c22')
           .attr('y', -10);
   
@@ -398,10 +415,42 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         svg.select<SVGGElement>('.x-axis-bottom').call(
           d3.axisBottom(event.transform.rescaleX(x)).tickFormat(() => '').tickSize(0)
         );
+  
+        // Reapply font-family style during zoom
+        svg.selectAll('text')
+          .style('font-family', "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif");
       });
   
     svg.call(this.zoom);
+  
+    // Apply global font-family style
+    svg.selectAll('text')
+      .style('font-family', "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif");
   }
+  
+  
+  formatDurationLabel(eventLabel: string, tasks: Task[]): string {
+    const taskName = eventLabel.split(' - ')[0];
+    const task = tasks.find(t => t.task === taskName);
+    if (!task) return '';
+    const event = task.events.find(e => `${task.task} - ${e.name}` === eventLabel);
+    if (!event) return '';
+  
+    const duration = Math.ceil((event.end.getTime() - event.start.getTime()) / (1000 * 60 * 60 * 24));
+    return `${duration} days`;
+  }
+
+  formatDurationLabelForSpan(eventLabel: string, tasks: Task[]): string {
+    const task = tasks.find(t => t.task === eventLabel);
+    if (!task) return '';
+  
+    const minStart = d3.min(task.events, e => e.start)!;
+    const maxEnd = d3.max(task.events, e => e.end)!;
+  
+    const duration = Math.ceil((maxEnd.getTime() - minStart.getTime()) / (1000 * 60 * 60 * 24));
+    return `${duration} days`;
+  }
+  
 
   adjustTooltipPosition(event: MouseEvent, tooltip: d3.Selection<HTMLDivElement, unknown, HTMLElement, any>) {
     const containerRect = document.querySelector('.container')!.getBoundingClientRect();
@@ -489,6 +538,9 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
     }
 
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
-    this.dateRangeText = `${startDate.toLocaleDateString('en-US', options)} - ${endDate.toLocaleDateString('en-US', options)}`;
+    this.dateRangeText = `${startDate.toLocaleDateString('en-US', options)} to ${endDate.toLocaleDateString('en-US', options)}`;
+    
   }
 }
+
+

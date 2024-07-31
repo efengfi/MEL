@@ -1,34 +1,48 @@
 <div class="container">
-    <div class="top-left-box"></div>
-    <div class="bottom-left-box"></div>
-    <div class="right-box"></div>
-    <div class="bottom-box"></div>
-    <div class="divider"></div>
-    <div class="tooltip"></div>
-    <div class="filters-box">
-      <div class="content-header">Content</div>
-      <div class="date-range">{{ dateRangeText }}</div>
-      <div class="filters">
-        <div class="filter-group filter-by-member-id">
-          <input type="text" id="memberIdFilter" #memberIdFilter placeholder="Member ID" (input)="applyFilters()">
-        </div>
-        <div class="filter-group filter-by-product">
-          <select id="taskFilter" #taskFilter (change)="applyFilters()">
-            <option value="all">All Products</option>
-            <option *ngFor="let task of uniqueTasks" [value]="task">{{ task }}</option>
-          </select>
-          <div class="triangle-icon"></div>
-        </div>
-        <div class="filter-group filter-by-date">
-          <input type="date" id="startDate" #startDate placeholder="Start Date" (change)="applyFilters()">
-        </div>
-        <div class="filter-group filter-by-date">
-          <input type="date" id="endDate" #endDate placeholder="End Date" (change)="applyFilters()">
-        </div>
+  <div class="dropdown-container"></div>
+  <div class="divider-top"></div>
+  <div class="divider-left"></div>
+  <div class="divider-right"></div>
+  <div class="tooltip"></div>
+  <div class="filters-box">
+    <div class="filters">
+      <div class="filter-group filter-by-member-id">
+        <input type="text" id="memberIdFilter" #memberIdFilter placeholder="Member ID" (input)="applyFilters()">
+      </div>
+      <div class="filter-group filter-by-household-id">
+        <input type="text" id="householdIdFilter" #householdIdFilter placeholder="Household ID" (input)="applyFilters()">
+      </div>
+      <div class="filter-group filter-by-product">
+        <select id="taskFilter" #taskFilter (change)="applyFilters()">
+          <option value="all">All Products</option>
+          <option *ngFor="let task of uniqueTasks" [value]="task">{{ task }}</option>
+        </select>
+        <div class="triangle-icon"></div>
+      </div>
+      <div class="filter-group filter-by-freq events">
+        <select id="freqEvents" #freqEvents (change)="applyFilters()">
+          <option value="">Select Event Frequency</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+          <option value="10">10</option>
+        </select>
+        <div class="triangle-icon"></div>
+      </div>
+      <div class="filter-group filter-by-date">
+        <input type="date" id="startDate" #startDate placeholder="Start Date" (change)="applyFilters()">
+      </div>
+      <div class="filter-group filter-by-date">
+        <input type="date" id="endDate" #endDate placeholder="End Date" (change)="applyFilters()">
       </div>
     </div>
-    <div class="gantt-chart">
-      <svg></svg>
-    </div>
   </div>
-  
+  <div class="header-box">
+    <div class="content-header">Member Event Log</div>
+    <div class="events-header">Events</div>
+    <div class="duration-header">Duration</div>
+    <div class="date-range">{{ dateRangeText }}</div>
+  </div>
+  <div class="gantt-chart">
+    <svg></svg>
+  </div>
+</div>

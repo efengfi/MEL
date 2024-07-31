@@ -44,7 +44,7 @@ app-side-bar.minimized {
   transition: margin-left 0.3s ease-in-out;
   overflow-y: auto; /* Enable vertical scrolling within content container */
   margin-left: 60px; /* Adjust margin to account for sidebar width */
-  background: #f9fafc;
+  background: #fff;
 }
 
 #content {
