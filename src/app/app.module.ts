@@ -30,7 +30,7 @@ import { DataTableComponent } from './data-table/data-table.component';
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    BrowserAnimationsModule,  // Make sure BrowserAnimationsModule is imported
+    BrowserAnimationsModule,
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,

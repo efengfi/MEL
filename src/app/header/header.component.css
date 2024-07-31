@@ -5,8 +5,7 @@
     padding: 20px 30px;
     box-sizing: border-box;
     justify-content: space-between;
-    border-bottom: 0.5px solid #dfe4ea;
-    background-color: #fff;
+    background-color: #0f3d70;
     color: #0f3d70;
     padding-left: 20px;
   }
@@ -14,11 +13,12 @@
   #logo {
     font-size: 18px;
     font-weight: bold;
-    color: #0f3d70;
+    color: #fff;
     display: flex;
-    gap: 10px;
+    gap: 5px;
     align-items: center;
     cursor: pointer;
+    letter-spacing: -0.5px;
   }
   
   #logo img:first-child {

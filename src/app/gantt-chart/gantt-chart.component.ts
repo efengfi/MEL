@@ -413,13 +413,13 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         );
   
         svg.selectAll('text')
-          .style('font-family', "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif");
+          .style('font-family', "sans-serif");
       });
   
     svg.call(this.zoom);
   
     svg.selectAll('text')
-      .style('font-family', "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif");
+      .style('font-family', "sans-serif");
   }
   
   

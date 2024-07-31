@@ -1,49 +1,54 @@
-/* side-bar.component.css */
 #sidebar {
-    width: auto;
-    height: 100%;
-    transition: width 0.3s ease-in-out;
-    background-color: #0666ba;
+  width: auto;
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+  background-color: #fff;
+  border-right: 0.5px solid #dfe4ea;
 }
 
 #menu {
-    display: flex;
-    flex-direction: column;
-    padding-top: 0px;
-    width: auto;
+  display: flex;
+  flex-direction: column;
+  padding-top: 0px;
+  width: auto;
 }
 
 #menu a {
-    text-decoration: none;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    padding: 15px 20px;
-    cursor: pointer;
+  text-decoration: none;
+  color: #0f3d70;
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  cursor: pointer;
+  position: relative; /* Add this for the pseudo-element positioning */
 }
 
-#menu a:hover {
-    background-color: #0f3d70;
+
+#menu a:hover::before, #menu a.active::before {
+  content: '';
+  position: absolute;
+  left: 1px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #0f3d70; /* Change the color as needed */
 }
 
-#menu a.active {
-    background-color: #0f3d70;
-}
 
 .icon {
-    display: inline-block;
-    margin-right: 10px;
+  display: inline-block;
+  margin-right: 10px;
 }
 
 .full-content {
-    display: none;
-    padding-left: 20px;
+  display: none;
+  padding-left: 20px;
 }
 
 .minimized .icon {
-    display: block;
+  display: block;
 }
 
 .minimized .full-content {
-    display: inline-block;
+  display: inline-block;
 }
