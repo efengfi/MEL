@@ -1,54 +1,54 @@
 .tabs {
-    position: fixed;
-    display: flex;
-    width: 100%;
-    font-size: 14px;
-    background-color: #fff;
-    border-bottom: 0.5px solid #dfe4ea;
-    justify-content: flex-start;
-    z-index: 6;
-  }
-  
-  .tab {
-    position: relative;
-    padding: 5px 15px; /* Ensure consistent padding */
-    cursor: pointer;
-    box-sizing: border-box; /* Ensure consistent padding and border behavior */
-    font-weight: normal; /* Set a normal weight by default */
-  }
-  
-  .tab::after {
-    content: "";
-    position: absolute;
-    bottom: 0px; /* Adjust as needed to avoid shifting */
-    left: 0px; /* Ensure it starts at the beginning of the tab */
-    right: 0px; /* Ensure it ends at the end of the tab */
-    height: 2px;
-    background-color: transparent; /* Start with a transparent underline */
-    transition: background-color 0.3s; /* Smooth transition */
-  }
-  
-  .tab.active::after,
-  .tab:hover::after {
-    background-color: #ed780f; /* Show underline on hover/active */
-  }
-  
-  .tab.active,
-  .tab:hover {
-    color: #ed780f;
-  }
-  
-  .tab.active {
-    font-weight: bold;
-  }
-  
-  /* Optional: Define a min-width for each tab to prevent shifts */
-  .tab {
-    min-width: 100px; /* Adjust this value as necessary */
-  }
-  
-  .content {
-    height: 100%;
-    overflow-y: hidden;
-  }
-  
+  position: fixed;
+  display: flex;
+  width: 100%;
+  font-size: 14px;
+  color: #0666BA;
+  background-color: #fff;
+  border-bottom: 0.5px solid #dfe4ea;
+  justify-content: flex-start;
+  z-index: 6;
+}
+
+.tab {
+  position: relative;
+  padding: 5px 15px; /* Ensure consistent padding */
+  cursor: pointer;
+  box-sizing: border-box; /* Ensure consistent padding and border behavior */
+  font-weight: normal; /* Set a normal weight by default */
+}
+
+.tab::after {
+  content: "";
+  position: absolute;
+  bottom: 0px; /* Adjust as needed to avoid shifting */
+  left: 0px; /* Ensure it starts at the beginning of the tab */
+  right: 0px; /* Ensure it ends at the end of the tab */
+  height: 2px;
+  background-color: transparent; /* Start with a transparent underline */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+.tab.active::after,
+.tab:hover::after {
+  background-color: #0f3d70; /* Show underline on hover/active */
+}
+
+.tab.active,
+.tab:hover {
+  color: #0666BA; /* Change active and hover color to blue */
+}
+
+.tab.active {
+  font-weight: bold;
+}
+
+/* Optional: Define a min-width for each tab to prevent shifts */
+.tab {
+  min-width: 100px; /* Adjust this value as necessary */
+}
+
+.content {
+  height: 100%;
+  overflow-y: hidden;
+}

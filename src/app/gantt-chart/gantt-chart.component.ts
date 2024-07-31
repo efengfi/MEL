@@ -158,7 +158,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('x2', d => x(d.start))
       .attr('y1', 0)
       .attr('y2', height)
-      .style('stroke', '#ccc')
+      .style('stroke', '#dfe4ea')
       .style('stroke-dasharray', '2,2');
 
     chartContainer.selectAll('.span-bar')
@@ -434,10 +434,10 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
     .attr('class', 'vertical-line')
     .attr('y1', 0)
     .attr('y2', height)
-    .attr('stroke', '#0c0d0e') // Change color here
     .attr('stroke-width', 1)
-    .attr('stroke-dasharray', '2,2') // Adjust dash spacing here
-    .style('display', 'none');
+    .attr('stroke', '#ed780f') // Change color here
+    .style('display', 'none')
+    .style('pointer-events', 'none'); // Disable pointer events for the vertical line
   
   svg.on('mousemove', (event) => {
     const [mouseX] = d3.pointer(event);
@@ -453,10 +453,6 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   svg.on('mouseleave', () => {
     verticalLine.style('display', 'none');
   });
-
-    svg.on('mouseleave', () => {
-      verticalLine.style('display', 'none');
-    });
   }
 
   formatDurationLabel(eventLabel: string, tasks: Task[]): string {
