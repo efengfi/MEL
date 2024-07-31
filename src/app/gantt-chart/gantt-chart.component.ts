@@ -5,7 +5,7 @@ interface Event {
   name: string;
   start: Date;
   end: Date;
-				  
+	  
 }
 
 interface Task {
@@ -25,31 +25,29 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   @ViewChild('endDate') endDate!: ElementRef;
   @ViewChild('memberIdFilter') memberIdFilter!: ElementRef;
 
-  currentDate = new Date();					   
+  currentDate = new Date();
 
   memberData: { [memberId: string]: Task[] } = {
     '10': [
-      { task: 'Checking', events: [																																  
-        { name: 'Event 1', start: new Date(2024, 5, 1), end: new Date(2024, 5, 3) },																																	  
-        { name: 'Event 2', start: new Date(2024, 5, 4), end: new Date(2024, 5, 5) },
-        { name: 'Event 3', start: new Date(2024, 5, 10), end: new Date(2024, 7, 11) }
+      { task: 'Checking', events: [
+        { name: 'Open', start: new Date(1996, 5, 1), end: new Date(2012, 3, 31) },
+        { name: 'Dormant', start: new Date(1996, 5, 4), end: new Date(2005, 3, 31) },
+        { name: 'Closed', start: new Date(2012, 3, 31), end: new Date(2015, 5, 27) },
+        { name: 'Open', start: new Date(2015, 5, 27), end: new Date(2024, 7, 27) }
       ], expanded: true },
       { task: 'Savings', events: [
-        { name: 'Event 1', start: new Date(2024, 2, 3), end: new Date(2024, 5, 5) },
-        { name: 'Event 2', start: new Date(2024, 9, 6), end: new Date(2024, 11, 20) },
-        { name: 'Event 3', start: new Date(2024, 3, 15), end: new Date(2024, 4, 18) }
+        { name: 'Open', start: new Date(1996, 2, 3), end: new Date(2012, 3, 31) },
+        { name: 'Closed', start: new Date(2012, 3, 31), end: new Date(2024, 7, 30) },
       ], expanded: true },
       { task: 'Loan', events: [
-        { name: 'Event 1', start: new Date(2024, 7, 9), end: new Date(2024, 8, 10) },
-        { name: 'Event 2', start: new Date(2024, 2, 13), end: new Date(2024, 3, 15) },
-        { name: 'Event 3', start: new Date(2024, 5, 20), end: new Date(2024, 7, 22) }
+        { name: 'Originating', start: new Date(2010, 3, 9), end: new Date(2024, 3, 10) },
+        { name: 'Active', start: new Date(2010, 3, 9), end: new Date(2024, 3, 10) },
+        { name: 'Paid', start: new Date(2020, 3, 20), end: new Date(2024, 3, 25) }
       ], expanded: true },
       { task: 'Credit', events: [
-																																									  
-        { name: 'Event 1', start: new Date(2024, 7, 9), end: new Date(2024, 8, 5) },
-																																									  
-        { name: 'Event 2', start: new Date(2024, 2, 13), end: new Date(2024, 3, 15) },
-        { name: 'Event 3', start: new Date(2024, 5, 20), end: new Date(2024, 7, 22) }
+        { name: 'Open', start: new Date(2000, 7, 9), end: new Date(2024, 7, 31) },
+        { name: 'Dormant', start: new Date(2001, 2, 13), end: new Date(2002, 3, 15) },
+        { name: 'Card Change', start: new Date(2002, 5, 20), end: new Date(2002, 6, 22) },
       ], expanded: true },
     ]
   };
@@ -68,7 +66,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
     this.calculateSvgWidth();
     this.updateDateRangeText();
   }
-  
+
   ngAfterViewInit(): void {
     this.calculateSvgWidth();
   }
@@ -101,7 +99,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
     svg.append('rect')
       .attr('width', width)
       .attr('height', height)
-      .attr('fill', 'white');
+      .attr('fill', 'white'); // background of chart
   
     svg.append('defs').append('clipPath')
       .attr('id', 'clip')
@@ -118,8 +116,8 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('y', -margin.top);
   
     const color = d3.scaleOrdinal<string>()
-      .domain(['Checking', 'Savings', 'Credit', 'Loan'])
-      .range(['#7b61ff', '#ff7f0e', '#fbc949', '#31debd']);
+      .domain(['Open', 'Dormant', 'Closed', 'Card Change', 'Paid'])
+      .range(['#4bd192', '#ffe047', '#ed596f', '#53aef4', '#4bd192']);
   
     const minDate = d3.min(filteredTasks.flatMap(task => task.events), e => e.start)!;
     const maxDate = d3.max(filteredTasks.flatMap(task => task.events), e => e.end)!;
@@ -129,13 +127,13 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .range([0, width]);
   
     const y = d3.scaleBand()
-      .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task} - ${event.name}`) : [])]))
+      .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task}-${event.name}`) : [])]))
       .range([0, height])
       .paddingInner(0.35)
       .paddingOuter(0.35);
   
     const durationY = d3.scaleBand()
-      .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task} - ${event.name}`) : [])]))
+      .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task}-${event.name}`) : [])]))
       .range([0, height])
       .paddingInner(0.35)
       .paddingOuter(0.35);
@@ -163,7 +161,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('y', d => y(d.task)! + y.bandwidth() * 0.25)
       .attr('width', d => x(d3.max(d.events, e => e.end)!) - x(d3.min(d.events, e => e.start)!))
       .attr('height', y.bandwidth() * 0.5)
-      .attr('fill', d => d3.color(color(d.task))!.darker(0.0).toString())
+      .attr('fill', '#979dad') // Set span bars to gray
       .attr('rx', 5)
       .attr('ry', 5)
       .on('mouseover', function (event, d) {
@@ -225,18 +223,17 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         tooltip.transition().duration(500).style('opacity', 0);
       });
   
-    chartContainer.selectAll('.bar')
+      chartContainer.selectAll('.bar')
       .data(filteredTasks.flatMap(task => task.expanded ? task.events.map(event => ({ task: task.task, ...event })) : []))
       .enter().append('rect')
       .attr('class', 'bar')
       .attr('x', d => x(d.start))
-      .attr('y', d => y(`${d.task} - ${d.name}`)!)
+      .attr('y', d => y(`${d.task}-${d.name}`)!)
       .attr('width', d => x(d.end) - x(d.start))
       .attr('height', y.bandwidth())
-      .attr('fill', d => color(d.task))
-      .attr('fill-opacity', 0.3)
-      .attr('stroke', d => d3.color(color(d.task))!.darker(1).toString())
-      .attr('stroke-width', 1)
+      .attr('fill', d => color(d.name)) // Use event name for color
+      .attr('stroke', d => d3.color(color(d.name))!.darker(1).toString()) // Set border color slightly darker
+      .attr('stroke-width', 1) // Set border width
       .attr('rx', 5)
       .attr('ry', 5)
       .on('mouseover', function (event, d) {
@@ -280,28 +277,28 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         const { pageX, pageY } = event;
         const tooltipWidth = parseInt(tooltip.style('width'), 10);
         const tooltipHeight = parseInt(tooltip.style('height'), 10);
-  
+    
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-  
+    
         let left = pageX + 5;
         let top = pageY - 28;
-  
+    
         if (pageX + tooltipWidth + 20 > viewportWidth) {
           left = pageX - tooltipWidth - 10;
         }
-  
+    
         if (pageY + tooltipHeight + 20 > viewportHeight) {
           top = pageY - tooltipHeight - 10;
         }
-  
+    
         tooltip.style('left', left + 'px').style('top', top + 'px');
       })
       .on('mouseout', function () {
         const tooltip = d3.select('.tooltip');
         tooltip.transition().duration(500).style('opacity', 0);
       });
-  
+      
     svg.append('g')
       .attr('class', 'x-axis-top')
       .call(d3.axisTop(x).tickSize(0))
@@ -330,17 +327,16 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(x).tickFormat(() => '').tickSize(0));
   
-    // Add a new y-axis for the duration labels
     svg.append('g')
       .attr('class', 'y-axis-duration')
-      .attr('transform', `translate(${margin.left2 - 180}, 0)`) // Adjust the translation value to move the axis more to the right
+      .attr('transform', `translate(${margin.left2 - 180}, 0)`)
       .call(d3.axisLeft(durationY).tickFormat(d => this.formatDurationLabel(d as string, filteredTasks)).tickSize(0))
       .selectAll('path')
-      .style('stroke', 'none'); // Remove the line for the duration axis
+      .style('stroke', 'none');
   
     svg.selectAll('.y-axis-duration text')
       .style('font-size', '12px')
-      .attr('text-anchor', 'start') // Left-align text
+      .attr('text-anchor', 'start')
       .attr('x', -40);
   
     // Add a new y-axis for the duration labels of the span bars
@@ -416,26 +412,24 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
           d3.axisBottom(event.transform.rescaleX(x)).tickFormat(() => '').tickSize(0)
         );
   
-        // Reapply font-family style during zoom
         svg.selectAll('text')
           .style('font-family', "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif");
       });
   
     svg.call(this.zoom);
   
-    // Apply global font-family style
     svg.selectAll('text')
       .style('font-family', "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif");
   }
   
   
   formatDurationLabel(eventLabel: string, tasks: Task[]): string {
-    const taskName = eventLabel.split(' - ')[0];
+    const [taskName, eventName] = eventLabel.split('-');
     const task = tasks.find(t => t.task === taskName);
     if (!task) return '';
-    const event = task.events.find(e => `${task.task} - ${e.name}` === eventLabel);
+    const event = task.events.find(e => e.name === eventName);
     if (!event) return '';
-  
+
     const duration = Math.ceil((event.end.getTime() - event.start.getTime()) / (1000 * 60 * 60 * 24));
     return `${duration} days`;
   }
@@ -443,10 +437,10 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   formatDurationLabelForSpan(eventLabel: string, tasks: Task[]): string {
     const task = tasks.find(t => t.task === eventLabel);
     if (!task) return '';
-  
+
     const minStart = d3.min(task.events, e => e.start)!;
     const maxEnd = d3.max(task.events, e => e.end)!;
-  
+
     const duration = Math.ceil((maxEnd.getTime() - minStart.getTime()) / (1000 * 60 * 60 * 24));
     return `${duration} days`;
   }
@@ -488,7 +482,8 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   }
 
   formatEventLabel(eventLabel: string): string {
-    return eventLabel;
+    const [taskName, eventName] = eventLabel.split('-');
+    return eventName || taskName;
   }
 
   applyFilters(): void {
@@ -539,7 +534,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
 
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     this.dateRangeText = `${startDate.toLocaleDateString('en-US', options)} to ${endDate.toLocaleDateString('en-US', options)}`;
-    
+	
   }
 }
 
