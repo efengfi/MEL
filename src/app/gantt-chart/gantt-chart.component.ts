@@ -33,7 +33,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
 
   memberData: { [memberId: string]: Member } = {
     '10': {
-      dateOfBirth: new Date(1980, 8, 18), // Month is 0-based, so 11 represents December
+      dateOfBirth: new Date(1980, 8, 18), // Month is 0-based, so 8 represents September
       tasks: [
         { task: 'Checking', events: [
           { name: 'Open', start: new Date(1996, 5, 1), end: new Date(2012, 3, 31) },
@@ -428,6 +428,35 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
 
     svg.selectAll('text')
       .style('font-family', "sans-serif");
+
+    // Add vertical line for cursor tracking
+    const verticalLine = svg.append('line')
+    .attr('class', 'vertical-line')
+    .attr('y1', 0)
+    .attr('y2', height)
+    .attr('stroke', '#0c0d0e') // Change color here
+    .attr('stroke-width', 1)
+    .attr('stroke-dasharray', '2,2') // Adjust dash spacing here
+    .style('display', 'none');
+  
+  svg.on('mousemove', (event) => {
+    const [mouseX] = d3.pointer(event);
+    if (mouseX >= 0 && mouseX <= width) {
+      verticalLine.style('display', null)
+        .attr('x1', mouseX)
+        .attr('x2', mouseX);
+    } else {
+      verticalLine.style('display', 'none');
+    }
+  });
+  
+  svg.on('mouseleave', () => {
+    verticalLine.style('display', 'none');
+  });
+
+    svg.on('mouseleave', () => {
+      verticalLine.style('display', 'none');
+    });
   }
 
   formatDurationLabel(eventLabel: string, tasks: Task[]): string {
