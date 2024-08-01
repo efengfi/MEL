@@ -23,7 +23,7 @@ app-header {
 
 app-side-bar {
   flex: 0 0 auto;
-  width: 220px;
+  width: 180px;
   min-width: 60px;
   transition: width 0.3s ease-in-out;
   overflow: hidden;
