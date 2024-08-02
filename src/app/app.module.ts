@@ -16,6 +16,7 @@ import { HeaderComponent } from './header/header.component';
 import { GanttChartComponent } from './gantt-chart/gantt-chart.component';
 import { DataDashboardComponent } from './data-dashboard/data-dashboard.component';
 import { DataTableComponent } from './data-table/data-table.component';
+import { GraphComponent } from './graph/graph.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { DataTableComponent } from './data-table/data-table.component';
     GanttChartComponent,
     DataDashboardComponent,
     DataTableComponent,
+    GraphComponent,
   ],
   imports: [
     BrowserModule,

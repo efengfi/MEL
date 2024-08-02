@@ -62,8 +62,8 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   uniqueTasks = ['Checking', 'Savings', 'Credit', 'Loan'];
   sampleMemberIds = Object.keys(this.memberData);
   svgWidth: number = 800;
+  svgHeight: number = 600; // Initialize with a default height
   zoom: any;
-  svgHeight: any;
   dateRangeText: string = '';
   dateOfBirthText: string = '';
 
@@ -86,8 +86,10 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
 
   calculateSvgWidth(): void {
     const containerWidth = document.querySelector('.gantt-chart')?.clientWidth || 800;
+    const containerHeight = document.querySelector('.gantt-chart')?.clientHeight || 600; // Default to 600 if not found
     const padding = 20;
     this.svgWidth = containerWidth - padding;
+    this.svgHeight = containerHeight - padding; // Adjust the SVG height based on the container height
     this.drawGanttChart();
   }
 
@@ -96,25 +98,25 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
     const filteredTasks = this.filterTasks();
     const margin = { top: 30, right: 0, bottom: 15, left: 249.65, right2: 0, left2: 140 };
     const width = this.svgWidth - margin.left - margin.right - margin.right2;
-    const height = 451 - margin.top - margin.bottom;
+    const height = this.svgHeight - margin.top - margin.bottom;
     const svg = d3.select('svg')
       .attr('width', this.svgWidth)
       .attr('height', height + margin.top + margin.bottom)
       .append('g')
       .attr('class', 'chart-container')
       .attr('transform', `translate(${margin.left},${margin.top})`);
-
+  
     svg.append('rect')
       .attr('width', width)
       .attr('height', height)
-      .attr('fill', 'white'); // background of chart
-
+      .attr('fill', 'white');
+  
     svg.append('defs').append('clipPath')
       .attr('id', 'clip')
       .append('rect')
       .attr('width', width)
       .attr('height', height);
-
+  
     svg.append('defs').append('clipPath')
       .attr('id', 'clip-x-axis')
       .append('rect')
@@ -122,34 +124,34 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('height', margin.top)
       .attr('x', 0)
       .attr('y', -margin.top);
-
+  
     const color = d3.scaleOrdinal<string>()
       .domain(['Open', 'Dormant', 'Closed', 'Card Change', 'Paid'])
       .range(['#4bd192', '#ffe047', '#ed596f', '#53aef4', '#4bd192']);
-
+  
     const minDate = d3.min(filteredTasks.flatMap(task => task.events), e => e.start)!;
     const maxDate = d3.max(filteredTasks.flatMap(task => task.events), e => e.end)!;
-
+  
     const x = d3.scaleTime()
       .domain([minDate, maxDate])
       .range([0, width]);
-
+  
     const y = d3.scaleBand()
       .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task}-${event.name}`) : [])]))
       .range([0, height])
       .paddingInner(0.35)
       .paddingOuter(0.35);
-
+  
     const durationY = d3.scaleBand()
       .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task}-${event.name}`) : [])]))
       .range([0, height])
       .paddingInner(0.35)
       .paddingOuter(0.35);
-
+  
     const chartContainer = svg.append('g')
       .attr('class', 'chart-content')
       .attr('clip-path', 'url(#clip)');
-
+  
     chartContainer.selectAll('.grid-line')
       .data(filteredTasks.flatMap(task => task.events))
       .enter().append('line')
@@ -160,7 +162,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('y2', height)
       .style('stroke', '#dfe4ea')
       .style('stroke-dasharray', '2,2');
-
+  
     chartContainer.selectAll('.span-bar')
       .data(filteredTasks)
       .enter().append('rect')
@@ -169,7 +171,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('y', d => y(d.task)! + y.bandwidth() * 0.25)
       .attr('width', d => x(d3.max(d.events, e => e.end)!) - x(d3.min(d.events, e => e.start)!))
       .attr('height', y.bandwidth() * 0.5)
-      .attr('fill', '#979dad') // Set span bars to gray
+      .attr('fill', '#979dad')
       .attr('rx', 5)
       .attr('ry', 5)
       .on('mouseover', function (event, d) {
@@ -209,28 +211,28 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         const { pageX, pageY } = event;
         const tooltipWidth = parseInt(tooltip.style('width'), 10);
         const tooltipHeight = parseInt(tooltip.style('height'), 10);
-
+  
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-
+  
         let left = pageX + 5;
         let top = pageY - 28;
-
+  
         if (pageX + tooltipWidth + 20 > viewportWidth) {
           left = pageX - tooltipWidth - 10;
         }
-
+  
         if (pageY + tooltipHeight + 20 > viewportHeight) {
           top = pageY - tooltipHeight - 10;
         }
-
+  
         tooltip.style('left', left + 'px').style('top', top + 'px');
       })
       .on('mouseout', function () {
         const tooltip = d3.select('.tooltip');
         tooltip.transition().duration(500).style('opacity', 0);
       });
-
+  
     chartContainer.selectAll('.bar')
       .data(filteredTasks.flatMap(task => task.expanded ? task.events.map(event => ({ task: task.task, ...event })) : []))
       .enter().append('rect')
@@ -239,9 +241,9 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('y', d => y(`${d.task}-${d.name}`)!)
       .attr('width', d => x(d.end) - x(d.start))
       .attr('height', y.bandwidth())
-      .attr('fill', d => color(d.name)) // Use event name for color
-      .attr('stroke', d => d3.color(color(d.name))!.darker(1).toString()) // Set border color slightly darker
-      .attr('stroke-width', 1) // Set border width
+      .attr('fill', d => color(d.name))
+      .attr('stroke', d => d3.color(color(d.name))!.darker(1).toString())
+      .attr('stroke-width', 1)
       .attr('rx', 5)
       .attr('ry', 5)
       .on('mouseover', function (event, d) {
@@ -285,28 +287,28 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         const { pageX, pageY } = event;
         const tooltipWidth = parseInt(tooltip.style('width'), 10);
         const tooltipHeight = parseInt(tooltip.style('height'), 10);
-
+  
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-
+  
         let left = pageX + 5;
         let top = pageY - 28;
-
+  
         if (pageX + tooltipWidth + 20 > viewportWidth) {
           left = pageX - tooltipWidth - 10;
         }
-
+  
         if (pageY + tooltipHeight + 20 > viewportHeight) {
           top = pageY - tooltipHeight - 10;
         }
-
+  
         tooltip.style('left', left + 'px').style('top', top + 'px');
       })
       .on('mouseout', function () {
         const tooltip = d3.select('.tooltip');
         tooltip.transition().duration(500).style('opacity', 0);
       });
-
+  
     svg.append('g')
       .attr('class', 'x-axis-top')
       .call(d3.axisTop(x).tickSize(0))
@@ -317,7 +319,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .style('font-size', '12px')
       .style('fill', '#0c0d0e')
       .attr('y', -10);
-
+  
     svg.append('g')
       .attr('class', 'y-axis-left')
       .call(d3.axisLeft(y).tickSize(0).tickPadding(10).tickFormat(d => this.formatEventLabel(d as string)))
@@ -329,37 +331,36 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .style('fill', '#0c0d0e')
       .style('cursor', 'pointer')
       .on('click', (event, d) => this.toggleTask(d as string));
-
+  
     svg.append('g')
       .attr('class', 'x-axis-bottom')
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(x).tickFormat(() => '').tickSize(0));
-
+  
     svg.append('g')
       .attr('class', 'y-axis-duration')
       .attr('transform', `translate(${margin.left2 - 180}, 0)`)
       .call(d3.axisLeft(durationY).tickFormat(d => this.formatDurationLabel(d as string, filteredTasks)).tickSize(0))
       .selectAll('path')
       .style('stroke', 'none');
-
+  
     svg.selectAll('.y-axis-duration text')
       .style('font-size', '12px')
       .attr('text-anchor', 'start')
       .attr('x', -40);
-
-    // Add a new y-axis for the duration labels of the span bars
+  
     svg.append('g')
       .attr('class', 'y-axis-duration-span')
-      .attr('transform', `translate(${margin.left2 - 180}, 0)`) // Adjust the translation value to move the axis more to the right
+      .attr('transform', `translate(${margin.left2 - 180}, 0)`)
       .call(d3.axisLeft(durationY).tickFormat(d => this.formatDurationLabelForSpan(d as string, filteredTasks)).tickSize(0))
       .selectAll('path')
-      .style('stroke', 'none'); // Remove the line for the duration axis
-
+      .style('stroke', 'none');
+  
     svg.selectAll('.y-axis-duration-span text')
       .style('font-size', '12px')
-      .attr('text-anchor', 'start') // Left-align text
+      .attr('text-anchor', 'start')
       .attr('x', -40);
-
+  
     svg.selectAll('.triangle')
       .data(filteredTasks)
       .enter()
@@ -381,13 +382,13 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         d.expanded = !d.expanded;
         this.drawGanttChart();
       });
-
+  
     svg.selectAll('.x-axis-top path, .x-axis-bottom path')
-      .style('stroke', '#dfe4ea');
-
+      .style('stroke', 'none');
+  
     svg.selectAll('.y-axis-left path, .y-axis-right path')
-      .style('stroke', '#dfe4ea');
-
+      .style('stroke', 'none');
+  
     this.zoom = d3.zoom<SVGSVGElement, unknown>()
       .scaleExtent([1, 4])
       .translateExtent([[0, 0], [width, height]])
@@ -396,64 +397,71 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         svg.select<SVGGElement>('.x-axis-top').call(
           d3.axisTop(event.transform.rescaleX(x)).tickSize(0)
         );
-
+  
         svg.selectAll('.x-axis-top text')
           .style('text-anchor', 'middle')
           .style('font-weight', '600')
           .style('font-size', '12px')
           .style('fill', '#0c0d0e')
           .attr('y', -10);
-
+  
         chartContainer.selectAll<SVGRectElement, any>('.bar')
           .attr('x', d => event.transform.applyX(x(d.start)))
           .attr('width', d => event.transform.k * (x(d.end) - x(d.start)));
-
+  
         chartContainer.selectAll<SVGRectElement, any>('.span-bar')
           .attr('x', d => event.transform.applyX(x(d3.min(d.events, (e: Event) => e.start)!)))
           .attr('width', d => event.transform.k * (x(d3.max(d.events, (e: Event) => e.end)!) - x(d3.min(d.events, (e: Event) => e.start)!)));
-
+  
         svg.selectAll<SVGLineElement, Event>('.grid-line')
           .attr('x1', d => event.transform.applyX(x(d.start)))
           .attr('x2', d => event.transform.applyX(x(d.start)));
-
+  
         svg.select<SVGGElement>('.x-axis-bottom').call(
           d3.axisBottom(event.transform.rescaleX(x)).tickFormat(() => '').tickSize(0)
         );
-
+  
         svg.selectAll('text')
           .style('font-family', "sans-serif");
+  
+        // Remove axis strokes when zooming
+        svg.selectAll('.x-axis-top path, .x-axis-bottom path')
+          .style('stroke', 'none');
+  
+        svg.selectAll('.y-axis-left path, .y-axis-right path')
+          .style('stroke', 'none');
       });
-
+  
     svg.call(this.zoom);
-
+  
     svg.selectAll('text')
       .style('font-family', "sans-serif");
-
-    // Add vertical line for cursor tracking
+  
     const verticalLine = svg.append('line')
-    .attr('class', 'vertical-line')
-    .attr('y1', 0)
-    .attr('y2', height)
-    .attr('stroke-width', 1)
-    .attr('stroke', '#ed780f') // Change color here
-    .style('display', 'none')
-    .style('pointer-events', 'none'); // Disable pointer events for the vertical line
+      .attr('class', 'vertical-line')
+      .attr('y1', 0)
+      .attr('y2', height)
+      .attr('stroke-width', 1)
+      .attr('stroke', '#ed780f')
+      .style('display', 'none')
+      .style('pointer-events', 'none');
   
-  svg.on('mousemove', (event) => {
-    const [mouseX] = d3.pointer(event);
-    if (mouseX >= 0 && mouseX <= width) {
-      verticalLine.style('display', null)
-        .attr('x1', mouseX)
-        .attr('x2', mouseX);
-    } else {
+    svg.on('mousemove', (event) => {
+      const [mouseX] = d3.pointer(event);
+      if (mouseX >= 0 && mouseX <= width) {
+        verticalLine.style('display', null)
+          .attr('x1', mouseX)
+          .attr('x2', mouseX);
+      } else {
+        verticalLine.style('display', 'none');
+      }
+    });
+  
+    svg.on('mouseleave', () => {
       verticalLine.style('display', 'none');
-    }
-  });
-  
-  svg.on('mouseleave', () => {
-    verticalLine.style('display', 'none');
-  });
+    });
   }
+  
 
   formatDurationLabel(eventLabel: string, tasks: Task[]): string {
     const [taskName, eventName] = eventLabel.split('-');

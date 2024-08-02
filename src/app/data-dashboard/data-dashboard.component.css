@@ -16,6 +16,8 @@
   cursor: pointer;
   box-sizing: border-box; /* Ensure consistent padding and border behavior */
   font-weight: normal; /* Set a normal weight by default */
+  text-align: center; /* Center the text within the tab */
+  min-width: 100px; /* Optional: Define a min-width for each tab to prevent shifts */
 }
 
 .tab::after {
@@ -41,11 +43,6 @@
 
 .tab.active {
   font-weight: bold;
-}
-
-/* Optional: Define a min-width for each tab to prevent shifts */
-.tab {
-  min-width: 100px; /* Adjust this value as necessary */
 }
 
 .content {
