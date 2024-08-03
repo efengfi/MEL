@@ -2,7 +2,6 @@
   <div class="dropdown-container"></div>
   <div class="divider-top"></div>
   <div class="divider-left"></div>
-  <div class="divider-right"></div>
   <div class="tooltip"></div>
   <div class="filters-box">
     <div class="filters">
@@ -16,15 +15,6 @@
         <select id="taskFilter" #taskFilter (change)="applyFilters()">
           <option value="all">All Products</option>
           <option *ngFor="let task of uniqueTasks" [value]="task">{{ task }}</option>
-        </select>
-        <div class="triangle-icon"></div>
-      </div>
-      <div class="filter-group filter-by-freq events">
-        <select id="freqEvents" #freqEvents (change)="applyFilters()">
-          <option value="">Select Common Sequence Frequency</option>
-          <option value="3">3</option>
-          <option value="5">5</option>
-          <option value="10">10</option>
         </select>
         <div class="triangle-icon"></div>
       </div>

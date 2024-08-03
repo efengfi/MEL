@@ -1,59 +1,161 @@
 .container {
   margin-top: 31px;
   position: relative;
-  overflow: hidden; /* Ensure container overflow is hidden */
+  overflow: hidden;
   background-color: #fff;
   height: 100%;
+  color: #0c0d0e;
+}
+
+.filters-box {
+  border-bottom: 0.5px solid #dfe4ea;
+  background-color: white;
+  position: relative;
+  z-index: 4;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  color: #0c0d0e;
+}
+
+.filters {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 5px;
+  background-color: #fff;
+  z-index: 3;
+  justify-content: flex-start;
+  color: #0c0d0e;
+}
+
+.filter-group {
+  flex-direction: column;
+  margin: 0 5px;
+  position: relative;
+  color: #0c0d0e;
+}
+
+.filter-group label {
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #0c0d0e;
+}
+
+.filter-by-keyword input {
+  background: url('/assets/magnifying.svg') no-repeat right 8px center;
+  background-size: 12px 12px;
+  color: #0c0d0e;
+}
+
+.filter-group input {
+  height: 25px;
+  font-size: 12px;
+  padding: 3px;
+  border: 0.5px solid #dfe4ea;
+  box-sizing: border-box;
+  border-radius: 7px;
+  color: #0c0d0e;
+  cursor: pointer;
+}
+
+.filter-group input::placeholder {
+  color: #0c0d0e;
 }
 
 .table-wrapper {
-  overflow-x: auto; /* Allow horizontal overflow for the table */
-  height: 100%; /* Ensure the table-wrapper takes full height */
+  overflow-x: auto;
+  height: calc(100% - 56px);
   position: relative;
+  padding: 0;
+  color: #0c0d0e;
 }
 
-/* Hide scrollbar for webkit browsers */
 .table-wrapper::-webkit-scrollbar {
   display: none;
 }
 
-/* Hide scrollbar for IE, Edge and Firefox */
 .table-wrapper {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 table {
-  border-top: 0.5px solid #dfe4ea;
   width: 100%;
-  border-collapse: collapse; /* This is important to ensure the borders don't overlap */
-  font-size: 12px; /* Set font size for all table content */
+  border-collapse: collapse;
+  font-size: 12px;
+  color: #0c0d0e;
 }
 
-table th, table td {
-  border-right: 0.5px solid #dfe4ea; /* Column separators */
-  font-size: 12px; /* Set font size for table headers and cells */
-  text-align: left; /* Left align headers and cells */
-  padding: 4px 8px; /* Reduce padding for shorter row height */
-  height: 20px; /* Set a fixed height for table cells */
-  white-space: nowrap; /* Prevent line break */
-  overflow: hidden; /* Hide overflow text */
-  text-overflow: ellipsis; /* Add ellipsis (...) for overflow text */
+table th,
+table td {
+  border-left: 0.5px solid #dfe4ea;
+  border-right: 0.5px solid #dfe4ea;
+  font-size: 12px;
+  text-align: left;
+  padding: 4px 8px;
+  height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #0c0d0e;
 }
 
 table tr {
-  border-bottom: 0.5px solid #dfe4ea; /* Row separators */
-  height: 20px; /* Set a fixed height for table rows */
+  border-bottom: 0.5px solid #dfe4ea;
+  height: 20px;
+  color: #0c0d0e;
 }
 
-.mat-form-field {
-  font-size: 12px;
-  width: 20%;
-}
-
-.custom-table th.mat-header-cell, .custom-table td.mat-cell {
+.custom-table th.mat-header-cell,
+.custom-table td.mat-cell {
   color: #0e0c22;
-  font-size: 12px; /* Ensure font size for mat-header-cell and mat-cell */
-  text-align: left; /* Left align headers and cells */
-  height: 20px; /* Set a fixed height for custom table cells */
+  font-size: 12px;
+  text-align: left;
+  height: 20px;
+  color: #0c0d0e;
 }
+
+.table-paginator-wrapper {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* Remove default mat-sort arrow */
+::ng-deep .mat-sort-header-arrow {
+  display: none !important;
+}
+
+/* Custom sort header content with custom arrow */
+::ng-deep .mat-sort-header-content {
+  position: relative;
+  display: inline-block;
+  padding-right: 15px;
+}
+
+/* Custom arrow styling */
+::ng-deep .mat-sort-header-content::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #0e0c22;
+  transform: translateY(-50%) rotate(0deg);
+  transition: transform 0.2s ease-in-out;
+}
+
+/* Rotate arrow for ascending order */
+::ng-deep .mat-sort-header-sorted .mat-sort-header-content::after {
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* Arrow stays the same for descending order */
+::ng-deep .mat-sort-header-sorted-desc .mat-sort-header-content::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+

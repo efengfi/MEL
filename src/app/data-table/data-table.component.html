@@ -1,56 +1,51 @@
 <div class="container">
-  <mat-form-field>
-    <mat-label>Filter Table</mat-label>
-    <input matInput placeholder="Search" (keyup)="applyFilter($event)">
-  </mat-form-field>
+  <div class="filters-box">
+    <div class="filters">
+      <div class="filter-group filter-by-keyword">
+        <input id="filter-input" placeholder="Search" (keyup)="applyFilter($event)">
+      </div>
+    </div>
+  </div>
 
   <div class="table-wrapper">
     <table mat-table matSort [dataSource]="dataSource" class="custom-table">
+      <!-- Define your columns as before -->
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
         <td mat-cell *matCellDef="let row">{{ row.type }}</td>
       </ng-container>
-
       <ng-container matColumnDef="md_access_number">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>MD Access Number</th>
         <td mat-cell *matCellDef="let row">{{ row.md_access_number }}</td>
       </ng-container>
-
       <ng-container matColumnDef="src_id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Source ID</th>
         <td mat-cell *matCellDef="let row">{{ row.src_id }}</td>
       </ng-container>
-
       <ng-container matColumnDef="dst_id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Destination ID</th>
         <td mat-cell *matCellDef="let row">{{ row.dst_id }}</td>
       </ng-container>
-
       <ng-container matColumnDef="src_Event">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Source Event</th>
         <td mat-cell *matCellDef="let row">{{ row.src_Event }}</td>
       </ng-container>
-
       <ng-container matColumnDef="dst_Event_id">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Destination Event ID</th>
         <td mat-cell *matCellDef="let row">{{ row.dst_Event_id }}</td>
       </ng-container>
-
       <ng-container matColumnDef="Date">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Date</th>
         <td mat-cell *matCellDef="let row">{{ row.Date }}</td>
       </ng-container>
-
       <ng-container matColumnDef="HOUSEHOLD_ID">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Household ID</th>
         <td mat-cell *matCellDef="let row">{{ row.HOUSEHOLD_ID }}</td>
       </ng-container>
-
       <ng-container matColumnDef="DOB">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Date of Birth</th>
         <td mat-cell *matCellDef="let row">{{ row.DOB }}</td>
       </ng-container>
-
       <ng-container matColumnDef="label_segment">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Label Segment</th>
         <td mat-cell *matCellDef="let row">{{ row.label_segment }}</td>
@@ -59,7 +54,9 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
+  </div>
 
-    <mat-paginator [pageSizeOptions]="[]" [pageSize]="10" aria-label="Select page of users"></mat-paginator>
+  <div class="table-paginator-wrapper">
+    <mat-paginator [pageSizeOptions]="[]" [pageSize]="15" aria-label="Select page of users"></mat-paginator>
   </div>
 </div>

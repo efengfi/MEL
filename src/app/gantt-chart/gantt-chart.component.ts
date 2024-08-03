@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, HostListener } from '@angular/core';
 import * as d3 from 'd3';
+import { GanttChartStateService } from '../gantt-chart-state.service';
 
 interface Event {
   name: string;
@@ -28,12 +29,13 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   @ViewChild('startDate') startDate!: ElementRef;
   @ViewChild('endDate') endDate!: ElementRef;
   @ViewChild('memberIdFilter') memberIdFilter!: ElementRef;
+  @ViewChild('householdIdFilter') householdIdFilter!: ElementRef;
 
   currentDate = new Date();
 
   memberData: { [memberId: string]: Member } = {
     '10': {
-      dateOfBirth: new Date(1980, 8, 18), // Month is 0-based, so 8 represents September
+      dateOfBirth: new Date(1980, 8, 18),
       tasks: [
         { task: 'Checking', events: [
           { name: 'Open', start: new Date(1996, 5, 1), end: new Date(2012, 3, 31) },
@@ -61,62 +63,73 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
 
   uniqueTasks = ['Checking', 'Savings', 'Credit', 'Loan'];
   sampleMemberIds = Object.keys(this.memberData);
-  svgWidth: number = 800;
-  svgHeight: number = 600; // Initialize with a default height
+  svgWidth: number = 0;
+  svgHeight: number = 0;
   zoom: any;
   dateRangeText: string = '';
   dateOfBirthText: string = '';
 
-  constructor() {}
+  constructor(public stateService: GanttChartStateService) {}
 
   ngOnInit(): void {
-    this.calculateSvgWidth();
+    this.calculateSvgDimensions();
     this.updateDateRangeText();
     this.updateDateOfBirthText();
   }
 
   ngAfterViewInit(): void {
-    this.calculateSvgWidth();
+    this.calculateSvgDimensions();
+    this.initializeFilters();
   }
 
   @HostListener('window:resize')
   onWindowResize() {
-    this.calculateSvgWidth();
+    this.calculateSvgDimensions();
   }
 
-  calculateSvgWidth(): void {
-    const containerWidth = document.querySelector('.gantt-chart')?.clientWidth || 800;
-    const containerHeight = document.querySelector('.gantt-chart')?.clientHeight || 600; // Default to 600 if not found
-    const padding = 20;
-    this.svgWidth = containerWidth - padding;
-    this.svgHeight = containerHeight - padding; // Adjust the SVG height based on the container height
+  initializeFilters(): void {
+    this.memberIdFilter.nativeElement.value = this.stateService.memberIdFilterValue;
+    this.householdIdFilter.nativeElement.value = this.stateService.householdIdFilterValue;
+    this.startDate.nativeElement.value = this.stateService.startDateValue;
+    this.endDate.nativeElement.value = this.stateService.endDateValue;
+    this.taskFilter.nativeElement.value = this.stateService.taskFilterValue;
+    this.drawGanttChart();
+  }
+
+  calculateSvgDimensions(): void {
+    const container = document.querySelector('.gantt-chart');
+    const containerWidth = container?.clientWidth || window.innerWidth;
+    const containerHeight = container?.clientHeight || window.innerHeight;
+    this.svgWidth = containerWidth;
+    this.svgHeight = containerHeight;
     this.drawGanttChart();
   }
 
   drawGanttChart(): void {
     d3.select('svg').selectAll('*').remove();
     const filteredTasks = this.filterTasks();
-    const margin = { top: 30, right: 0, bottom: 15, left: 249.65, right2: 0, left2: 140 };
+    const margin = { top: 30, right: 0, bottom: 0, left: 250, right2: 0, left2: 140 };
     const width = this.svgWidth - margin.left - margin.right - margin.right2;
     const height = this.svgHeight - margin.top - margin.bottom;
+
     const svg = d3.select('svg')
       .attr('width', this.svgWidth)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('height', this.svgHeight)
       .append('g')
       .attr('class', 'chart-container')
       .attr('transform', `translate(${margin.left},${margin.top})`);
-  
+
     svg.append('rect')
       .attr('width', width)
       .attr('height', height)
       .attr('fill', 'white');
-  
+
     svg.append('defs').append('clipPath')
       .attr('id', 'clip')
       .append('rect')
       .attr('width', width)
       .attr('height', height);
-  
+
     svg.append('defs').append('clipPath')
       .attr('id', 'clip-x-axis')
       .append('rect')
@@ -124,34 +137,34 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('height', margin.top)
       .attr('x', 0)
       .attr('y', -margin.top);
-  
+
     const color = d3.scaleOrdinal<string>()
       .domain(['Open', 'Dormant', 'Closed', 'Card Change', 'Paid'])
       .range(['#4bd192', '#ffe047', '#ed596f', '#53aef4', '#4bd192']);
-  
+
     const minDate = d3.min(filteredTasks.flatMap(task => task.events), e => e.start)!;
     const maxDate = d3.max(filteredTasks.flatMap(task => task.events), e => e.end)!;
-  
+
     const x = d3.scaleTime()
       .domain([minDate, maxDate])
       .range([0, width]);
-  
+
     const y = d3.scaleBand()
       .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task}-${event.name}`) : [])]))
       .range([0, height])
       .paddingInner(0.35)
       .paddingOuter(0.35);
-  
+
     const durationY = d3.scaleBand()
       .domain(filteredTasks.flatMap(task => [task.task, ...(task.expanded ? task.events.map(event => `${task.task}-${event.name}`) : [])]))
       .range([0, height])
       .paddingInner(0.35)
       .paddingOuter(0.35);
-  
+
     const chartContainer = svg.append('g')
       .attr('class', 'chart-content')
       .attr('clip-path', 'url(#clip)');
-  
+
     chartContainer.selectAll('.grid-line')
       .data(filteredTasks.flatMap(task => task.events))
       .enter().append('line')
@@ -162,7 +175,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('y2', height)
       .style('stroke', '#dfe4ea')
       .style('stroke-dasharray', '2,2');
-  
+
     chartContainer.selectAll('.span-bar')
       .data(filteredTasks)
       .enter().append('rect')
@@ -211,28 +224,28 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         const { pageX, pageY } = event;
         const tooltipWidth = parseInt(tooltip.style('width'), 10);
         const tooltipHeight = parseInt(tooltip.style('height'), 10);
-  
+
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-  
+
         let left = pageX + 5;
         let top = pageY - 28;
-  
+
         if (pageX + tooltipWidth + 20 > viewportWidth) {
           left = pageX - tooltipWidth - 10;
         }
-  
+
         if (pageY + tooltipHeight + 20 > viewportHeight) {
           top = pageY - tooltipHeight - 10;
         }
-  
+
         tooltip.style('left', left + 'px').style('top', top + 'px');
       })
       .on('mouseout', function () {
         const tooltip = d3.select('.tooltip');
         tooltip.transition().duration(500).style('opacity', 0);
       });
-  
+
     chartContainer.selectAll('.bar')
       .data(filteredTasks.flatMap(task => task.expanded ? task.events.map(event => ({ task: task.task, ...event })) : []))
       .enter().append('rect')
@@ -287,28 +300,28 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         const { pageX, pageY } = event;
         const tooltipWidth = parseInt(tooltip.style('width'), 10);
         const tooltipHeight = parseInt(tooltip.style('height'), 10);
-  
+
         const viewportWidth = window.innerWidth;
         const viewportHeight = window.innerHeight;
-  
+
         let left = pageX + 5;
         let top = pageY - 28;
-  
+
         if (pageX + tooltipWidth + 20 > viewportWidth) {
           left = pageX - tooltipWidth - 10;
         }
-  
+
         if (pageY + tooltipHeight + 20 > viewportHeight) {
           top = pageY - tooltipHeight - 10;
         }
-  
+
         tooltip.style('left', left + 'px').style('top', top + 'px');
       })
       .on('mouseout', function () {
         const tooltip = d3.select('.tooltip');
         tooltip.transition().duration(500).style('opacity', 0);
       });
-  
+
     svg.append('g')
       .attr('class', 'x-axis-top')
       .call(d3.axisTop(x).tickSize(0))
@@ -319,7 +332,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .style('font-size', '12px')
       .style('fill', '#0c0d0e')
       .attr('y', -10);
-  
+
     svg.append('g')
       .attr('class', 'y-axis-left')
       .call(d3.axisLeft(y).tickSize(0).tickPadding(10).tickFormat(d => this.formatEventLabel(d as string)))
@@ -331,36 +344,36 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .style('fill', '#0c0d0e')
       .style('cursor', 'pointer')
       .on('click', (event, d) => this.toggleTask(d as string));
-  
+
     svg.append('g')
       .attr('class', 'x-axis-bottom')
       .attr('transform', `translate(0, ${height})`)
       .call(d3.axisBottom(x).tickFormat(() => '').tickSize(0));
-  
+
     svg.append('g')
       .attr('class', 'y-axis-duration')
       .attr('transform', `translate(${margin.left2 - 180}, 0)`)
       .call(d3.axisLeft(durationY).tickFormat(d => this.formatDurationLabel(d as string, filteredTasks)).tickSize(0))
       .selectAll('path')
       .style('stroke', 'none');
-  
+
     svg.selectAll('.y-axis-duration text')
       .style('font-size', '12px')
       .attr('text-anchor', 'start')
       .attr('x', -40);
-  
+
     svg.append('g')
       .attr('class', 'y-axis-duration-span')
       .attr('transform', `translate(${margin.left2 - 180}, 0)`)
       .call(d3.axisLeft(durationY).tickFormat(d => this.formatDurationLabelForSpan(d as string, filteredTasks)).tickSize(0))
       .selectAll('path')
       .style('stroke', 'none');
-  
+
     svg.selectAll('.y-axis-duration-span text')
       .style('font-size', '12px')
       .attr('text-anchor', 'start')
       .attr('x', -40);
-  
+
     svg.selectAll('.triangle')
       .data(filteredTasks)
       .enter()
@@ -382,13 +395,13 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         d.expanded = !d.expanded;
         this.drawGanttChart();
       });
-  
+
     svg.selectAll('.x-axis-top path, .x-axis-bottom path')
       .style('stroke', 'none');
-  
+
     svg.selectAll('.y-axis-left path, .y-axis-right path')
       .style('stroke', 'none');
-  
+
     this.zoom = d3.zoom<SVGSVGElement, unknown>()
       .scaleExtent([1, 4])
       .translateExtent([[0, 0], [width, height]])
@@ -397,46 +410,45 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         svg.select<SVGGElement>('.x-axis-top').call(
           d3.axisTop(event.transform.rescaleX(x)).tickSize(0)
         );
-  
+
         svg.selectAll('.x-axis-top text')
           .style('text-anchor', 'middle')
           .style('font-weight', '600')
           .style('font-size', '12px')
           .style('fill', '#0c0d0e')
           .attr('y', -10);
-  
+
         chartContainer.selectAll<SVGRectElement, any>('.bar')
           .attr('x', d => event.transform.applyX(x(d.start)))
           .attr('width', d => event.transform.k * (x(d.end) - x(d.start)));
-  
+
         chartContainer.selectAll<SVGRectElement, any>('.span-bar')
           .attr('x', d => event.transform.applyX(x(d3.min(d.events, (e: Event) => e.start)!)))
           .attr('width', d => event.transform.k * (x(d3.max(d.events, (e: Event) => e.end)!) - x(d3.min(d.events, (e: Event) => e.start)!)));
-  
+
         svg.selectAll<SVGLineElement, Event>('.grid-line')
           .attr('x1', d => event.transform.applyX(x(d.start)))
           .attr('x2', d => event.transform.applyX(x(d.start)));
-  
+
         svg.select<SVGGElement>('.x-axis-bottom').call(
           d3.axisBottom(event.transform.rescaleX(x)).tickFormat(() => '').tickSize(0)
         );
-  
+
         svg.selectAll('text')
           .style('font-family', "sans-serif");
-  
-        // Remove axis strokes when zooming
+
         svg.selectAll('.x-axis-top path, .x-axis-bottom path')
           .style('stroke', 'none');
-  
+
         svg.selectAll('.y-axis-left path, .y-axis-right path')
           .style('stroke', 'none');
       });
-  
+
     svg.call(this.zoom);
-  
+
     svg.selectAll('text')
       .style('font-family', "sans-serif");
-  
+
     const verticalLine = svg.append('line')
       .attr('class', 'vertical-line')
       .attr('y1', 0)
@@ -445,7 +457,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
       .attr('stroke', '#ed780f')
       .style('display', 'none')
       .style('pointer-events', 'none');
-  
+
     svg.on('mousemove', (event) => {
       const [mouseX] = d3.pointer(event);
       if (mouseX >= 0 && mouseX <= width) {
@@ -456,12 +468,11 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
         verticalLine.style('display', 'none');
       }
     });
-  
+
     svg.on('mouseleave', () => {
       verticalLine.style('display', 'none');
     });
   }
-  
 
   formatDurationLabel(eventLabel: string, tasks: Task[]): string {
     const [taskName, eventName] = eventLabel.split('-');
@@ -509,7 +520,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   }
 
   toggleTask(taskName: string): void {
-    const memberId = this.memberIdFilter.nativeElement.value;
+    const memberId = this.stateService.memberIdFilterValue;
     if (!memberId || !this.memberData[memberId]) return;
 
     const tasks = this.memberData[memberId].tasks;
@@ -526,16 +537,21 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   }
 
   applyFilters(): void {
+    this.stateService.memberIdFilterValue = this.memberIdFilter.nativeElement.value;
+    this.stateService.startDateValue = this.startDate.nativeElement.value;
+    this.stateService.endDateValue = this.endDate.nativeElement.value;
+    this.stateService.taskFilterValue = this.taskFilter.nativeElement.value;
+    this.stateService.householdIdFilterValue = this.householdIdFilter.nativeElement.value; // New addition for household ID
     this.updateDateRangeText();
     this.updateDateOfBirthText();
     this.drawGanttChart();
   }
 
   filterTasks(): Task[] {
-    const selectedTask = this.taskFilter.nativeElement.value;
-    const start = new Date(this.startDate.nativeElement.value);
-    const end = new Date(this.endDate.nativeElement.value);
-    const memberId = this.memberIdFilter.nativeElement.value;
+    const selectedTask = this.stateService.taskFilterValue;
+    const start = new Date(this.stateService.startDateValue);
+    const end = new Date(this.stateService.endDateValue);
+    const memberId = this.stateService.memberIdFilterValue;
 
     if (!memberId || !this.memberData[memberId]) {
       return [];
@@ -554,9 +570,9 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   }
 
   updateDateRangeText(): void {
-    const startInput = this.startDate.nativeElement.value;
-    const endInput = this.endDate.nativeElement.value;
-    const memberId = this.memberIdFilter.nativeElement.value;
+    const startInput = this.stateService.startDateValue;
+    const endInput = this.stateService.endDateValue;
+    const memberId = this.stateService.memberIdFilterValue;
     if (!memberId || !this.memberData[memberId]) {
       this.dateRangeText = '';
       return;
@@ -577,7 +593,7 @@ export class GanttChartComponent implements OnInit, AfterViewInit {
   }
 
   updateDateOfBirthText(): void {
-    const memberId = this.memberIdFilter.nativeElement.value;
+    const memberId = this.stateService.memberIdFilterValue;
     if (!memberId || !this.memberData[memberId]) {
       this.dateOfBirthText = '';
       return;

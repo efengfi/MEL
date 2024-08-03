@@ -18,6 +18,8 @@ import { DataDashboardComponent } from './data-dashboard/data-dashboard.componen
 import { DataTableComponent } from './data-table/data-table.component';
 import { GraphComponent } from './graph/graph.component';
 import { HistogramComponent } from './histogram/histogram.component';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { GanttChartStateService } from './gantt-chart-state.service';
 
 @NgModule({
   declarations: [
@@ -40,8 +42,10 @@ import { HistogramComponent } from './histogram/histogram.component';
     MatSortModule,
     MatFormFieldModule,
     MatInputModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [GanttChartStateService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
