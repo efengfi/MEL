@@ -5,10 +5,16 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 export interface UserData {
-  id: string;
-  userId: string;
-  title: string;
-  body: string;
+  type: string;
+  md_access_number: string;
+  src_id: string;
+  dst_id: string;
+  src_Event: string;
+  dst_Event_id: string;
+  Date: string;
+  HOUSEHOLD_ID: string;
+  DOB: string;
+  label_segment: string;
 }
 
 @Component({
@@ -17,7 +23,7 @@ export interface UserData {
   styleUrls: ['./data-table.component.css']
 })
 export class DataTableComponent implements AfterViewInit {
-  displayedColumns: string[] = ['id', 'userId', 'title', 'body'];
+  displayedColumns: string[] = ['type', 'md_access_number', 'src_id', 'dst_id', 'src_Event', 'dst_Event_id', 'Date', 'HOUSEHOLD_ID', 'DOB', 'label_segment'];
   dataSource!: MatTableDataSource<UserData>;
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;

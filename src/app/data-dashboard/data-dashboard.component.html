@@ -5,6 +5,9 @@
   <div class="tab" [class.active]="activeTab === 'graph'" (click)="selectTab('graph')">
     Graph Analytics
   </div>
+  <div class="tab" [class.active]="activeTab === 'histogram'" (click)="selectTab('histogram')">
+    Histogram
+  </div>
   <div class="tab" [class.active]="activeTab === 'data-table'" (click)="selectTab('data-table')">
     Data Table
   </div>
@@ -13,5 +16,6 @@
 <div class="content">
   <app-gantt-chart *ngIf="activeTab === 'gantt-chart'"></app-gantt-chart>
   <app-graph *ngIf="activeTab === 'graph'"></app-graph>
+  <app-histogram *ngIf="activeTab === 'histogram'"></app-histogram>
   <app-data-table *ngIf="activeTab === 'data-table'"></app-data-table>
 </div>

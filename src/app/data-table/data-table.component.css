@@ -1,23 +1,59 @@
-
-
 .container {
   margin-top: 31px;
-  container: relative;
-  overflow: hidden;
+  position: relative;
+  overflow: hidden; /* Ensure container overflow is hidden */
   background-color: #fff;
   height: 100%;
 }
 
+.table-wrapper {
+  overflow-x: auto; /* Allow horizontal overflow for the table */
+  height: 100%; /* Ensure the table-wrapper takes full height */
+  position: relative;
+}
+
+/* Hide scrollbar for webkit browsers */
+.table-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.table-wrapper {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
 table {
-  border-top: 1.5px solid #dfe4ea;
+  border-top: 0.5px solid #dfe4ea;
   width: 100%;
+  border-collapse: collapse; /* This is important to ensure the borders don't overlap */
+  font-size: 12px; /* Set font size for all table content */
+}
+
+table th, table td {
+  border-right: 0.5px solid #dfe4ea; /* Column separators */
+  font-size: 12px; /* Set font size for table headers and cells */
+  text-align: left; /* Left align headers and cells */
+  padding: 4px 8px; /* Reduce padding for shorter row height */
+  height: 20px; /* Set a fixed height for table cells */
+  white-space: nowrap; /* Prevent line break */
+  overflow: hidden; /* Hide overflow text */
+  text-overflow: ellipsis; /* Add ellipsis (...) for overflow text */
+}
+
+table tr {
+  border-bottom: 0.5px solid #dfe4ea; /* Row separators */
+  height: 20px; /* Set a fixed height for table rows */
 }
 
 .mat-form-field {
-  font-size: 14px;
+  font-size: 12px;
   width: 20%;
 }
 
 .custom-table th.mat-header-cell, .custom-table td.mat-cell {
   color: #0e0c22;
+  font-size: 12px; /* Ensure font size for mat-header-cell and mat-cell */
+  text-align: left; /* Left align headers and cells */
+  height: 20px; /* Set a fixed height for custom table cells */
 }

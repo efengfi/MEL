@@ -17,6 +17,7 @@ import { GanttChartComponent } from './gantt-chart/gantt-chart.component';
 import { DataDashboardComponent } from './data-dashboard/data-dashboard.component';
 import { DataTableComponent } from './data-table/data-table.component';
 import { GraphComponent } from './graph/graph.component';
+import { HistogramComponent } from './histogram/histogram.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { GraphComponent } from './graph/graph.component';
     DataDashboardComponent,
     DataTableComponent,
     GraphComponent,
+    HistogramComponent,
   ],
   imports: [
     BrowserModule,
