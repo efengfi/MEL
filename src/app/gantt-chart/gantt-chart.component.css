@@ -1,7 +1,7 @@
 .container {
     margin-top: 31px;
     container: relative;
-    overflow: hidden;
+    height: 100vh;
   }
   
   .divider-top {
@@ -171,6 +171,6 @@
 
 .gantt-chart {
   width: 100%;
-  height: 74vh;
-  overflow: hidden; /* Allow scroll if content overflows */
+  height: calc(100vh - 157.5px);
+  overflow: hidden;
 }
