@@ -1,1 +1,17 @@
-<div class="histogram-container" style="width: 100%; height: 500px;"></div>
+<div class="container">
+    <div class="divider-top"></div>
+    <div class="filters-box">
+        <div class="content-header">Frequency of Member Events</div>
+        <div class="filters">
+            <div class="filter-group filter-by-date">
+                <div class="filter-group filter-by-date">
+                    <input type="date" id="startDate" #startDate placeholder="Start Date" (change)="applyFilters()">
+                  </div>
+                  <div class="filter-group filter-by-date">
+                    <input type="date" id="endDate" #endDate placeholder="End Date" (change)="applyFilters()">
+                  </div>
+            </div>
+        </div>
+    </div>
+    <div class="histogram"></div>
+</div>

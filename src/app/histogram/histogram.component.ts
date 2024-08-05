@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, HostListener, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ElementRef, HostListener, AfterViewInit, ViewChild } from '@angular/core';
 import * as d3 from 'd3';
 
 interface EventData {
@@ -19,26 +19,60 @@ interface ParsedEventData {
   styleUrls: ['./histogram.component.css']
 })
 export class HistogramComponent implements OnInit, AfterViewInit {
+  @ViewChild('startDate') startDateInput: any;
+  @ViewChild('endDate') endDateInput: any;
+
   private data: EventData[] = [
-    { date: '2000-07-01', event: 'Event A', frequency: 10 },
-    { date: '2003-07-02', event: 'Event B', frequency: 20 },
-    { date: '2006-07-03', event: 'Event C', frequency: 15 },
-    { date: '2009-07-04', event: 'Event D', frequency: 30 },
-    { date: '2010-07-05', event: 'Event E', frequency: 25 },
-    { date: '2014-07-06', event: 'Event F', frequency: 5 },
-    { date: '2018-07-07', event: 'Event G', frequency: 40 },
-    { date: '2019-07-08', event: 'Event H', frequency: 35 },
-    { date: '2023-07-09', event: 'Event I', frequency: 10 },
+    { date: '2019-11-20', event: 'Branch Visit', frequency: 1 },
+    { date: '2020-10-23', event: 'Branch Visit', frequency: 1 },
+    { date: '2020-11-03', event: 'Branch Visit', frequency: 1 },
+    { date: '2016-08-01', event: 'Saving Open', frequency: 1 },
+    { date: '2017-01-03', event: 'Checking Open', frequency: 1 },
+    { date: '2017-03-03', event: 'Checking Dormant', frequency: 1 },
+    { date: '2017-08-15', event: 'Consumer Loan Open', frequency: 1 },
+    { date: '2018-05-25', event: 'Consumer Loan Close', frequency: 1 },
+    { date: '2018-08-26', event: 'Consumer Loan Open', frequency: 1 },
+    { date: '2019-10-25', event: 'Consumer Loan Close', frequency: 1 },
+    { date: '2018-09-09', event: 'Consumer Loan Open', frequency: 1 },
+    { date: '2019-10-26', event: 'Consumer Loan Close', frequency: 1 },
+    { date: '2020-01-07', event: 'Consumer Loan Open', frequency: 1 },
+    { date: '2020-12-09', event: 'Consumer Loan Paid Off', frequency: 1 },
+    { date: '2021-06-09', event: 'Consumer Loan Open', frequency: 1 },
+    { date: '2021-06-09', event: 'Consumer Loan Close', frequency: 1 },
+    { date: '2024-01-09', event: 'Consumer Loan Open', frequency: 1 },
+    { date: '2024-04-13', event: 'Consumer Loan Close', frequency: 1 },
+    { date: '2024-05-03', event: 'Consumer Loan Open', frequency: 1 },
+    { date: '2017-09-09', event: 'Auto Loan Open', frequency: 1 },
+    { date: '2018-01-09', event: 'Auto Loan Close', frequency: 1 },
+    { date: '2018-02-17', event: 'Auto Loan Open', frequency: 1 },
+    { date: '2024-01-05', event: 'Auto Loan Close', frequency: 1 },
+    { date: '2021-06-09', event: 'Auto Loan Open', frequency: 1 },
+    { date: '2017-11-26', event: 'Credit Open', frequency: 1 },
+    { date: '2018-08-08', event: 'Credit Change', frequency: 1 },
+    { date: '2021-09-16', event: 'Credit Freeze', frequency: 1 },
+    { date: '2024-03-15', event: 'Credit Incomplete Application', frequency: 1 },
+    { date: '2024-05-05', event: 'Credit Incomplete Application', frequency: 1 },
+    { date: '2024-05-05', event: 'Credit Complete Application', frequency: 1 },
+    { date: '2024-05-06', event: 'Credit Open', frequency: 1 },
+    { date: '2021-11-05', event: 'Debit Freeze', frequency: 1 },
+    { date: '2021-09-16', event: 'eGain COVID', frequency: 1 },
+    { date: '2021-09-18', event: 'eGain COVID', frequency: 1 },
+    { date: '2023-01-09', event: 'eGain Social Engineering', frequency: 1 },
+    { date: '2022-02-02', event: 'eMessages Email Member', frequency: 1 },
+    { date: '2022-02-02', event: 'Mobile Wallet Wallet', frequency: 1 },
+    { date: '2024-03-14', event: 'Personal Loan Complete Application', frequency: 1 }
   ];
 
+  private filteredData: EventData[] = this.data;
+
   private svg: any;
-  private margin = { top: 50, right: 150, bottom: 50, left: 50 };
+  private margin = { top: 50, right: 250, bottom: 50, left: 50 };
   private width: number = 0;
   private height: number = 0;
 
   private colors = d3.scaleOrdinal()
-    .domain(['Event A', 'Event B', 'Event C'])
-    .range(['#1f77b4', '#ff7f0e', '#2ca02c']);
+    .domain(['Branch Visit', 'Saving Open', 'Checking Open', 'Consumer Loan Open', 'Auto Loan Open', 'Credit Open', 'Debit Freeze', 'eGain COVID', 'eMessages Email Member', 'Mobile Wallet Wallet', 'Personal Loan Complete Application'])
+    .range(d3.schemeCategory10);
 
   constructor(private el: ElementRef) { }
 
@@ -48,7 +82,7 @@ export class HistogramComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.createSvg();
-    this.drawBars(this.data);
+    this.drawBars(this.filteredData);
     this.addLegend();
   }
 
@@ -59,7 +93,7 @@ export class HistogramComponent implements OnInit, AfterViewInit {
   }
 
   private updateDimensions(): void {
-    const element = this.el.nativeElement.querySelector('.histogram-container');
+    const element = this.el.nativeElement.querySelector('.histogram');
     const containerWidth = element.clientWidth;
     const containerHeight = element.clientHeight;
 
@@ -68,7 +102,7 @@ export class HistogramComponent implements OnInit, AfterViewInit {
   }
 
   private createSvg(): void {
-    const element = this.el.nativeElement.querySelector('.histogram-container');
+    const element = this.el.nativeElement.querySelector('.histogram');
     const containerWidth = element.clientWidth;
     const containerHeight = element.clientHeight;
 
@@ -97,45 +131,55 @@ export class HistogramComponent implements OnInit, AfterViewInit {
 
   private drawBars(data: EventData[]): void {
     this.svg.selectAll('*').remove();
-
+  
     this.svg.append('rect')
       .attr('width', this.width)
       .attr('height', this.height)
       .attr('fill', '#e8f1fa');
-
+  
     // Parse the date strings into Date objects
     const parsedData: ParsedEventData[] = data.map(d => ({
       ...d,
       date: d3.timeParse('%Y-%m-%d')(d.date)!
     }));
-
+  
     // Calculate the bar width based on the number of events
-    const barWidth = Math.min(this.width / parsedData.length * 0.2, this.width / 20);
-
+    const barWidth = Math.min(this.width / parsedData.length * 0.3, this.width / 20);
+  
     const x = d3.scaleTime()
       .range([0, this.width - barWidth])
       .domain(d3.extent(parsedData, d => d.date) as [Date, Date]);
-
+  
+    // Calculate the maximum frequency and round it up to the nearest multiple of 5
+    const maxFrequency = Math.ceil(d3.max(parsedData, d => d.frequency)! / 5) * 5;
+  
     const y = d3.scaleLinear()
-      .domain([0, d3.max(parsedData, d => d.frequency)!])
+      .domain([0, maxFrequency])
       .range([this.height, 0]);
-
+  
     this.drawGridLines(y);
-
+  
     const xAxis = d3.axisBottom(x).tickSize(0);
-    const yAxis = d3.axisLeft(y).ticks(5).tickSize(0);
-
+    const yAxis = d3.axisLeft(y)
+      .ticks(maxFrequency / 5)
+      .tickValues(d3.range(0, maxFrequency + 5, 5)) // Setting the tick values to multiples of 5
+      .tickSize(0);
+  
     this.svg.append('g')
       .attr('transform', `translate(0,${this.height})`)
       .call(xAxis)
-      .selectAll('.domain, .tick line')
-      .attr('stroke', 'none');
-
+      .selectAll('.domain, .tick line, .tick text')
+      .attr('stroke', 'none')
+      .style('font-family', 'sans-serif')
+      .style('font-size', '12px');
+  
     this.svg.append('g')
       .call(yAxis)
-      .selectAll('.domain, .tick line')
-      .attr('stroke', 'none');
-
+      .selectAll('.domain, .tick line, .tick text')
+      .attr('stroke', 'none')
+      .style('font-family', 'sans-serif')
+      .style('font-size', '12px');
+  
     this.svg.selectAll('rect.bar')
       .data(parsedData)
       .enter()
@@ -146,7 +190,7 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .attr('width', barWidth)
       .attr('height', (d: ParsedEventData) => this.height - y(d.frequency))
       .attr('fill', (d: ParsedEventData) => this.colors(d.event));
-
+  
     // Change the axis lines to white
     this.svg.selectAll('.domain')
       .attr('stroke', 'white');
@@ -154,32 +198,68 @@ export class HistogramComponent implements OnInit, AfterViewInit {
 
   private addLegend(): void {
     const events = Array.from(new Set(this.data.map(d => d.event)));
-
+  
     const legend = this.svg.selectAll('.legend')
       .data(events)
       .enter().append('g')
       .attr('class', 'legend')
       .attr('transform', (_: string, i: number) => `translate(0,${i * 20})`);
-
-    legend.append('rect')
-      .attr('x', this.width + 20)
-      .attr('y', 0)
-      .attr('width', 18)
-      .attr('height', 18)
+  
+    legend.append('circle')  // Change rect to circle
+      .attr('cx', this.width + 29)  // Adjust x position
+      .attr('cy', 9)  // Adjust y position
+      .attr('r', 3)  // Set radius for the circle
       .style('fill', (d: string) => this.colors(d));
-
+  
     legend.append('text')
       .attr('x', this.width + 40)
       .attr('y', 9)
       .attr('dy', '.35em')
       .style('text-anchor', 'start')
-      .text((d: string) => d);
+      .text((d: string) => d)
+      .style('font-family', 'sans-serif')
+      .style('font-size', '12px');
   }
+  
 
   private redraw(): void {
     d3.select(this.el.nativeElement).select('svg').remove();
     this.createSvg();
-    this.drawBars(this.data);
+    this.drawBars(this.filteredData);
     this.addLegend();
+  }
+
+  applyFilters(): void {
+    const startDateValue = this.startDateInput.nativeElement.value;
+    const endDateValue = this.endDateInput.nativeElement.value;
+  
+    if (startDateValue && endDateValue) {
+      const startDate = new Date(startDateValue);
+      const endDate = new Date(endDateValue);
+  
+      this.filteredData = this.data.filter(d => {
+        const date = new Date(d.date);
+        return date >= startDate && date <= endDate;
+      });
+    } else if (startDateValue) {
+      const startDate = new Date(startDateValue);
+  
+      this.filteredData = this.data.filter(d => {
+        const date = new Date(d.date);
+        return date >= startDate;
+      });
+    } else if (endDateValue) {
+      const endDate = new Date(endDateValue);
+  
+      this.filteredData = this.data.filter(d => {
+        const date = new Date(d.date);
+        return date <= endDate;
+      });
+    } else {
+      // If both date inputs are empty, reset to the original data
+      this.filteredData = this.data;
+    }
+  
+    this.redraw();
   }
 }

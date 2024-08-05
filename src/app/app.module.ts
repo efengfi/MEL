@@ -20,7 +20,9 @@ import { GraphComponent } from './graph/graph.component';
 import { HistogramComponent } from './histogram/histogram.component';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { GanttChartStateService } from './gantt-chart-state.service';
+import { MemberGraphComponent } from './member-graph/member-graph.component';
 
+// comment
 @NgModule({
   declarations: [
     AppComponent,
@@ -31,6 +33,7 @@ import { GanttChartStateService } from './gantt-chart-state.service';
     DataTableComponent,
     GraphComponent,
     HistogramComponent,
+    MemberGraphComponent,
   ],
   imports: [
     BrowserModule,

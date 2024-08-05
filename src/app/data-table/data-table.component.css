@@ -21,7 +21,7 @@
 
 .content-header {
   position: absolute;
-  top: 36px;
+  top: 32px;
   left: 5px;
   padding: 5px;
   color: #0c0d0e;
@@ -111,7 +111,7 @@
   height: calc(100% - 56px);
   position: relative;
   padding: 0;
-  margin-top: 47px;
+  margin-top: 49px;
   color: #0c0d0e;
 }
 

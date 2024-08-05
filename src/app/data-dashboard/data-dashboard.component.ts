@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-
+// some comment
 @Component({
   selector: 'app-data-dashboard',
   templateUrl: './data-dashboard.component.html',
