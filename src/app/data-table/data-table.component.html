@@ -1,15 +1,24 @@
 <div class="container">
+  <div class="divider-top"></div>
   <div class="filters-box">
+    <div class="content-header">Events</div>
     <div class="filters">
       <div class="filter-group filter-by-keyword">
         <input id="filter-input" placeholder="Search" (keyup)="applyFilter($event)">
+      </div>
+      <div class="filter-group filter-by-common">
+        <select id="event-filter" (change)="applyEventFilter($event)">
+          <option value="Most Common Events">Most Common Events</option>
+          <option value="3">3</option>
+          <option value="5">5</option>
+        </select>
+        <div class="triangle-icon"></div>
       </div>
     </div>
   </div>
 
   <div class="table-wrapper">
     <table mat-table matSort [dataSource]="dataSource" class="custom-table">
-      <!-- Define your columns as before -->
       <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
         <td mat-cell *matCellDef="let row">{{ row.type }}</td>
@@ -28,6 +37,14 @@
       </ng-container>
       <ng-container matColumnDef="src_Event">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Source Event</th>
+        <td mat-cell *matCellDef="let row">{{ row.src_Event }}</td>
+      </ng-container>
+      <ng-container matColumnDef="src_Event_id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Source Event ID</th>
+        <td mat-cell *matCellDef="let row">{{ row.src_Event }}</td>
+      </ng-container>
+      <ng-container matColumnDef="dst_Event">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Destination Event</th>
         <td mat-cell *matCellDef="let row">{{ row.src_Event }}</td>
       </ng-container>
       <ng-container matColumnDef="dst_Event_id">
@@ -57,6 +74,6 @@
   </div>
 
   <div class="table-paginator-wrapper">
-    <mat-paginator [pageSizeOptions]="[]" [pageSize]="15" aria-label="Select page of users"></mat-paginator>
+    <mat-paginator [pageSizeOptions]="[]" [pageSize]="10" aria-label="Select page of users"></mat-paginator>
   </div>
 </div>

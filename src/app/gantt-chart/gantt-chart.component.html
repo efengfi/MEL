@@ -13,8 +13,25 @@
       </div>
       <div class="filter-group filter-by-product">
         <select id="taskFilter" #taskFilter (change)="applyFilters()">
-          <option value="all">All Products</option>
+          <option value="all">All Events</option>
           <option *ngFor="let task of uniqueTasks" [value]="task">{{ task }}</option>
+        </select>
+        <div class="triangle-icon"></div>
+      </div>
+      <div class="filter-group filter-by-channel">
+        <select id="channelFilter" #channelFilter (change)="applyFilters()">
+          <option value="all">All Channels</option>
+          <option value="Web">Web</option>
+          <option value="Mobile">Mobile</option>
+          <option value="In-Person">In-Person</option>
+        </select>
+        <div class="triangle-icon"></div>
+      </div>
+      <div class="filter-group filter-by-fraud">
+        <select id="fraudFilter" #fraudFilter (change)="applyFilters()">
+          <option value="all">Choose Status</option>
+          <option value="Yes">Fraudulent</option>
+          <option value="No">Not Fraudulent</option>
         </select>
         <div class="triangle-icon"></div>
       </div>

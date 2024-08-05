@@ -1,31 +1,29 @@
 .container {
-    margin-top: 31px;
-    container: relative;
-    height: 100vh;
-  }
-  
-  .divider-top {
-    position: fixed;
-    left: 0px;
-    top: 0px;
-    height: 186px;
-    width: 100%;
-    background-color: transparent;
-    border-bottom: 0.5px solid #dfe4ea;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  margin-top: 31px;
+  container: relative;
+  height: 100vh;
+}
 
-  }
+.divider-top {
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  height: 176px;
+  width: 100%;
+  background-color: transparent;
+  border-bottom: 0.5px solid #dfe4ea;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
 
-  .divider-left {
-    position: fixed;
-    left: 309px;
-    top: 0px;
-    height: 100%;
-    width: 1px;
-    background-color: #dfe4ea;
-    z-index: 4;
-  }
-
+.divider-left {
+  position: absolute;
+  left: 309px;
+  top: 0px;
+  height: 100%;
+  width: 1px;
+  background-color: #dfe4ea;
+  z-index: 4;
+}
 
 .filters-box {
   border-bottom: 0.5px solid #dfe4ea;
@@ -35,7 +33,6 @@
 }
 
 .header-box {
-
   position: relative;
   height: 30px;
   background-color: white;
@@ -54,7 +51,7 @@
 
 .events-header {
   position: absolute;
-  top: 30px;
+  top: 20px;
   left: 5px;
   padding: 5px;
   color: #0c0d0e;
@@ -70,10 +67,9 @@
   color: #0c0d0e;
   font-size: 12px;
   font-weight: 600;
-  top: 30px;
+  top: 20px;
   z-index: 4;
 }
-
 
 .date-range {
   position: absolute;
@@ -96,7 +92,6 @@
   font-weight: 600;
   z-index: 4;
 }
-
 
 .filters {
   position: relative;
