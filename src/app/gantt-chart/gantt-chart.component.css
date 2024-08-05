@@ -39,13 +39,13 @@
   z-index: 3;
 }
 
-.content-header {
+.label-segment {
   position: absolute;
-  left: 5px;
-  padding: 5px;
+  top: 1.5px;
+  left: 10px;
   color: #0c0d0e;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 12px;
+  font-weight: 600;
   z-index: 4;
 }
 
@@ -73,7 +73,6 @@
 
 .date-range {
   position: absolute;
-  padding: 5px;
   top: 1.5px;
   left: 255px;
   color: #0c0d0e;
@@ -84,9 +83,8 @@
 
 .date-of-birth {
   position: absolute;
-  padding: 5px;
   top: 1.5px;
-  right: 5px;
+  right: 10px;
   color: #0c0d0e;
   font-size: 12px;
   font-weight: 600;

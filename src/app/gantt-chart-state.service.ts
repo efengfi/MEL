@@ -9,4 +9,6 @@ export class GanttChartStateService {
   startDateValue: string = '';
   endDateValue: string = '';
   taskFilterValue: string = 'all';
+  channelFilterValue: any;
+  fraudFilterValue: any;
 }

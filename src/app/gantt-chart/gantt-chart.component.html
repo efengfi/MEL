@@ -29,7 +29,7 @@
       </div>
       <div class="filter-group filter-by-fraud">
         <select id="fraudFilter" #fraudFilter (change)="applyFilters()">
-          <option value="all">Choose Status</option>
+          <option value="all">All Statuses</option>
           <option value="Yes">Fraudulent</option>
           <option value="No">Not Fraudulent</option>
         </select>
@@ -44,11 +44,11 @@
     </div>
   </div>
   <div class="header-box">
-    <div class="content-header">Member Event Log</div>
-    <div class="events-header">Events</div>
+    <div class="events-header">Member Events</div>
     <div class="duration-header">Duration</div>
     <div class="date-range">{{ dateRangeText }}</div>
     <div class="date-of-birth">{{ dateOfBirthText }}</div>
+    <div class="label-segment">{{ labelSegmentText }}</div> 
   </div>
   <div class="gantt-chart">
     <svg></svg>
