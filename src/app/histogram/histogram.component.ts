@@ -123,13 +123,14 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .attr('class', 'grid')
       .call(d3.axisLeft(y)
         .tickSize(-this.width)
+        .ticks(d3.max(y.domain()) || 1)  // Ensure ticks are set based on max frequency
         .tickFormat(() => '')
       )
       .selectAll('.tick line')
       .attr('stroke', 'white');
   }
-
- private drawBars(data: EventData[]): void {
+  
+  private drawBars(data: EventData[]): void {
     this.svg.selectAll('*').remove();
   
     this.svg.append('rect')
@@ -157,10 +158,10 @@ export class HistogramComponent implements OnInit, AfterViewInit {
     this.drawGridLines(y);
   
     const xAxis = d3.axisBottom(x)
-      .ticks(d3.timeYear.every(1)); // Add this line to set the tick interval to 1 year
+      .ticks(d3.timeYear.every(1));
   
     const yAxis = d3.axisLeft(y)
-      .ticks(maxFrequency)  // Change this line to set tick interval to 1
+      .ticks(maxFrequency)  // Set tick interval to 1
       .tickSize(0);
   
     this.svg.append('g')
@@ -193,9 +194,8 @@ export class HistogramComponent implements OnInit, AfterViewInit {
   
     this.svg.selectAll('.domain')
       .attr('stroke', 'white');
-}
-
-
+  }
+  
 
   private getEventColor(event: string): string {
     if (event.toLowerCase().includes('open')) {
