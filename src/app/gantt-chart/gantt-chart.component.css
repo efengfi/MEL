@@ -1,11 +1,11 @@
 .container {
-  margin-top: 31px;
+  margin-top: 30px;
   container: relative;
   height: 100vh;
 }
 
 .divider-top {
-  position: fixed;
+  position: absolute;
   left: 0px;
   top: 0px;
   height: 176px;
@@ -41,7 +41,7 @@
 
 .label-segment {
   position: absolute;
-  top: 1.5px;
+  top: 5px;
   left: 10px;
   color: #0c0d0e;
   font-size: 14px;
@@ -73,8 +73,8 @@
 
 .date-range {
   position: absolute;
-  top: 1.5px;
-  left: 255px;
+  top: 5px;
+  left: 260px;
   color: #0c0d0e;
   font-size: 14px;
   font-weight: 600;
@@ -83,7 +83,7 @@
 
 .date-of-birth {
   position: absolute;
-  top: 1.5px;
+  top: 5px;
   right: 10px;
   color: #0c0d0e;
   font-size: 14px;

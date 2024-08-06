@@ -66,13 +66,13 @@ export class HistogramComponent implements OnInit, AfterViewInit {
   private filteredData: EventData[] = this.data;
 
   private svg: any;
-  private margin = { top: 50, right: 250, bottom: 50, left: 50 };
+  private margin = { top: 30, right: 275, bottom: 50, left: 15 };
   private width: number = 0;
   private height: number = 0;
 
   private colors = d3.scaleOrdinal()
-    .domain(['Branch Visit', 'Saving Open', 'Checking Open', 'Consumer Loan Open', 'Auto Loan Open', 'Credit Open', 'Debit Freeze', 'eGain COVID', 'eMessages Email Member', 'Mobile Wallet Wallet', 'Personal Loan Complete Application'])
-    .range(d3.schemeCategory10);
+    .domain(['Open', 'Dormant', 'Close', 'Change', 'Paid Off', 'Freeze', 'Incomplete Application', 'Complete Application', 'Visit', 'COVID', 'Social Engineering', 'Email Member', 'Wallet'])
+    .range(['#24bb74', '#fed500', '#d30d4b', '#fa8c0f', '#1e95ef', '#e8f1fa', '#fed500', '#24bb74', '#6a46fe', '#600622', '#7b6a00', '#c8f8e2', '#4d2b05']);
 
   constructor(private el: ElementRef) { }
 
@@ -189,11 +189,45 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .attr('y', (d: ParsedEventData) => y(d.frequency))
       .attr('width', barWidth)
       .attr('height', (d: ParsedEventData) => this.height - y(d.frequency))
-      .attr('fill', (d: ParsedEventData) => this.colors(d.event));
+      .attr('fill', (d: ParsedEventData) => this.getEventColor(d.event))
+      .attr('stroke', (d: ParsedEventData) => d3.color(this.getEventColor(d.event))!.darker(1).toString())
+      .attr('stroke-width', 1);
   
     // Change the axis lines to white
     this.svg.selectAll('.domain')
       .attr('stroke', 'white');
+  }
+
+  private getEventColor(event: string): string {
+    if (event.toLowerCase().includes('open')) {
+      return '#24bb74'; // Open
+    } else if (event.toLowerCase().includes('dormant')) {
+      return '#fed500'; // Dormant
+    } else if (event.toLowerCase().includes('close')) {
+      return '#d30d4b'; // Close
+    } else if (event.toLowerCase().includes('change')) {
+      return '#fa8c0f'; // Change
+    } else if (event.toLowerCase().includes('paid off')) {
+      return '#1e95ef'; // Paid Off
+    } else if (event.toLowerCase().includes('freeze')) {
+      return '#e8f1fa'; // Freeze
+    } else if (event.toLowerCase().includes('incomplete application')) {
+      return '#fed500'; // Incomplete Application
+    } else if (event.toLowerCase().includes('complete application')) {
+      return '#24bb74'; // Complete Application
+    } else if (event.toLowerCase().includes('visit')) {
+      return '#6a46fe'; // Visit
+    } else if (event.toLowerCase().includes('covid')) {
+      return '#600622'; // COVID
+    } else if (event.toLowerCase().includes('social engineering')) {
+      return '#7b6a00'; // Social Engineering
+    } else if (event.toLowerCase().includes('email member')) {
+      return '#c8f8e2'; // Email Member
+    } else if (event.toLowerCase().includes('wallet')) {
+      return '#4d2b05'; // Wallet
+    } else {
+      return '#000000'; // Default color if none match
+    }
   }
 
   private addLegend(): void {
@@ -209,7 +243,7 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .attr('cx', this.width + 29)  // Adjust x position
       .attr('cy', 9)  // Adjust y position
       .attr('r', 3)  // Set radius for the circle
-      .style('fill', (d: string) => this.colors(d));
+      .style('fill', (d: string) => this.getEventColor(d));
   
     legend.append('text')
       .attr('x', this.width + 40)
@@ -220,7 +254,6 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .style('font-family', 'sans-serif')
       .style('font-size', '12px');
   }
-  
 
   private redraw(): void {
     d3.select(this.el.nativeElement).select('svg').remove();

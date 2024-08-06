@@ -1,37 +1,13 @@
 .container {
-  margin-top: 31px;
-  position: relative;
-  overflow: hidden;
+  margin-top: 30px;
   background-color: #fff;
   height: 100%;
+  overflow: auto;
   color: #0c0d0e;
 }
 
-.divider-top {
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  height: 176px;
-  width: 100%;
-  background-color: transparent;
-  border-bottom: 0.5px solid #dfe4ea;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-  z-index: 4;
-}
-
-.content-header {
-  position: absolute;
-  top: 32px;
-  left: 5px;
-  padding: 5px;
-  color: #0c0d0e;
-  font-size: 14px;
-  font-weight: bold;
-  z-index: 4;
-}
 
 .filters-box {
-  border-bottom: 0.5px solid #dfe4ea;
   background-color: white;
   position: relative;
   z-index: 4;
@@ -68,7 +44,8 @@
   color: #0c0d0e;
 }
 
-.filter-group input, .filter-group select {
+.filter-group input,
+.filter-group select {
   height: 25px;
   font-size: 12px;
   padding: 3px;
@@ -89,7 +66,6 @@
   padding-right: 30px;
 }
 
-
 .triangle-icon {
   position: absolute;
   right: 10px;
@@ -101,86 +77,20 @@
   pointer-events: none;
 }
 
-
 .filter-group input::placeholder {
   color: #0c0d0e;
 }
 
-.table-wrapper {
-  overflow-x: auto;
-  height: calc(100% - 56px);
-  position: relative;
-  padding: 0;
-  margin-top: 49px;
-  color: #0c0d0e;
-}
-
-.table-wrapper::-webkit-scrollbar {
-  display: none;
-}
-
-.table-wrapper {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 12px;
-  color: #0c0d0e;
-}
-
-table th,
-table td {
-  border-left: 0.5px solid #dfe4ea;
-  border-right: 0.5px solid #dfe4ea;
-  font-size: 12px;
-  text-align: left;
-  padding: 4px 8px;
-  height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  color: #0c0d0e;
-}
-
-table tr {
-  border-bottom: 0.5px solid #dfe4ea;
-  height: 20px;
-  color: #0c0d0e;
-}
-
-.custom-table th.mat-header-cell,
-.custom-table td.mat-cell {
-  color: #0e0c22;
-  font-size: 12px;
-  text-align: left;
-  height: 20px;
-  color: #0c0d0e;
-}
-
-.table-paginator-wrapper {
-  position: absolute;
-  bottom: 40px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
-/* Remove default mat-sort arrow */
 ::ng-deep .mat-sort-header-arrow {
   display: none !important;
 }
 
-/* Custom sort header content with custom arrow */
 ::ng-deep .mat-sort-header-content {
   position: relative;
   display: inline-block;
   padding-right: 15px;
 }
 
-/* Custom arrow styling */
 ::ng-deep .mat-sort-header-content::after {
   content: '';
   position: absolute;
@@ -195,13 +105,60 @@ table tr {
   transition: transform 0.2s ease-in-out;
 }
 
-/* Rotate arrow for ascending order */
 ::ng-deep .mat-sort-header-sorted .mat-sort-header-content::after {
   transform: translateY(-50%) rotate(180deg);
 }
 
-/* Arrow stays the same for descending order */
 ::ng-deep .mat-sort-header-sorted-desc .mat-sort-header-content::after {
   transform: translateY(-50%) rotate(0deg);
 }
 
+.table-wrapper {
+  height: calc(100% - 66px); /* Adjust based on the height of other elements like header */
+  overflow-y: auto;
+}
+
+
+table tr {
+  border-bottom: 0.5px solid #dfe4ea;
+  height: 20px;
+  color: #0c0d0e;
+  font-family: sans-serif;
+  border-bottom: 0.5px solid #dfe4ea; /* Added border-bottom */
+}
+
+table th {
+  border-top: 0.5px solid #dfe4ea;
+  border-left: 0.25px solid #dfe4ea;
+  border-right: 0.25px solid #dfe4ea;
+  font-weight: 600; /* Corrected font-weight */
+  font-size: 14px;
+  text-align: left;
+  padding: 4px 8px;
+  height: 20px;
+  white-space: nowrap;
+  position: sticky;
+  text-overflow: ellipsis;
+  color: #0c0d0e;
+  top: 0;
+  background: white;
+  z-index: 4;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
+}
+
+table td {
+  border-left: 0.25px solid #dfe4ea;
+  border-right: 0.25px solid #dfe4ea;
+  border-bottom: 0.5px solid #dfe4ea; /* Added border-bottom */
+  font-size: 12px;
+  text-align: left;
+  padding: 4px 8px;
+  height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #0c0d0e;
+}
+
+table tr:last-child td {
+  border-bottom: 0.5px solid #dfe4ea; /* Ensure last row also has bottom border */
+}
