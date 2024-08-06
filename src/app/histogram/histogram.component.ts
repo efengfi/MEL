@@ -129,7 +129,7 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .attr('stroke', 'white');
   }
 
-  private drawBars(data: EventData[]): void {
+ private drawBars(data: EventData[]): void {
     this.svg.selectAll('*').remove();
   
     this.svg.append('rect')
@@ -137,20 +137,17 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .attr('height', this.height)
       .attr('fill', '#e8f1fa');
   
-    // Parse the date strings into Date objects
     const parsedData: ParsedEventData[] = data.map(d => ({
       ...d,
       date: d3.timeParse('%Y-%m-%d')(d.date)!
     }));
   
-    // Calculate the bar width based on the number of events
     const barWidth = Math.min(this.width / parsedData.length * 0.3, this.width / 20);
   
     const x = d3.scaleTime()
       .range([0, this.width - barWidth])
       .domain(d3.extent(parsedData, d => d.date) as [Date, Date]);
   
-    // Calculate the maximum frequency and round it up to the nearest multiple of 5
     const maxFrequency = Math.ceil(d3.max(parsedData, d => d.frequency)! / 5) * 5;
   
     const y = d3.scaleLinear()
@@ -159,10 +156,11 @@ export class HistogramComponent implements OnInit, AfterViewInit {
   
     this.drawGridLines(y);
   
-    const xAxis = d3.axisBottom(x).tickSize(0);
+    const xAxis = d3.axisBottom(x)
+      .ticks(d3.timeYear.every(1)); // Add this line to set the tick interval to 1 year
+  
     const yAxis = d3.axisLeft(y)
-      .ticks(maxFrequency / 5)
-      .tickValues(d3.range(0, maxFrequency + 5, 5)) // Setting the tick values to multiples of 5
+      .ticks(maxFrequency)  // Change this line to set tick interval to 1
       .tickSize(0);
   
     this.svg.append('g')
@@ -193,10 +191,11 @@ export class HistogramComponent implements OnInit, AfterViewInit {
       .attr('stroke', (d: ParsedEventData) => d3.color(this.getEventColor(d.event))!.darker(1).toString())
       .attr('stroke-width', 1);
   
-    // Change the axis lines to white
     this.svg.selectAll('.domain')
       .attr('stroke', 'white');
-  }
+}
+
+
 
   private getEventColor(event: string): string {
     if (event.toLowerCase().includes('open')) {
